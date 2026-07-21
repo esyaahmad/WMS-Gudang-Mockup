@@ -24,7 +24,7 @@ export default function Home() {
               >
                 <div className="text-3xl mb-2">📦</div>
                 <h2 className="text-2xl font-bold text-gray-800 mb-2 group-hover:text-green-600">
-                  Scanner2
+                  Pemetaan Produk
                 </h2>
                 <p className="text-gray-600 mb-4">
                   Pemetaan Bahan - Scan dan masukan produk ke rak gudang
@@ -40,7 +40,7 @@ export default function Home() {
               >
                 <div className="text-3xl mb-2">🔄</div>
                 <h2 className="text-2xl font-bold text-gray-800 mb-2 group-hover:text-green-600">
-                  ScannerRack3
+                  Pemindahan Pemetaan Produk
                 </h2>
                 <p className="text-gray-600 mb-4">
                   Pemindahan Bahan - Pindahkan produk antar rak
@@ -56,7 +56,7 @@ export default function Home() {
               >
                 <div className="text-3xl mb-2">📊</div>
                 <h2 className="text-2xl font-bold text-gray-800 mb-2 group-hover:text-green-600">
-                  Stock Opname
+                  Stock Opname Produk
                 </h2>
                 <p className="text-gray-600 mb-4">
                   Opname Tahunan - Verifikasi dan input kuantitas stok
@@ -72,10 +72,26 @@ export default function Home() {
               >
                 <div className="text-3xl mb-2">🔍</div>
                 <h2 className="text-2xl font-bold text-gray-800 mb-2 group-hover:text-green-600">
-                  Label Identitas
+                  Cek Label Identitas Produk
                 </h2>
                 <p className="text-gray-600 mb-4">
                   Cek Detail - Lihat informasi lengkap label produk
+                </p>
+                <div className="text-green-600 font-semibold group-hover:translate-x-1 transition-transform">
+                  Mulai →
+                </div>
+              </Link>
+
+              <Link
+                to="/mock-use-bahan-kemas2"
+                className="group bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow p-6 hover:bg-green-50"
+              >
+                <div className="text-3xl mb-2">🏷️</div>
+                <h2 className="text-2xl font-bold text-gray-800 mb-2 group-hover:text-green-600">
+                  Withdraw Produk
+                </h2>
+                <p className="text-gray-600 mb-4">
+                  Ambil Bahan Kemas (Produksi) - Cari bon, scan wadah, dan konfirmasi penarikan
                 </p>
                 <div className="text-green-600 font-semibold group-hover:translate-x-1 transition-transform">
                   Mulai →

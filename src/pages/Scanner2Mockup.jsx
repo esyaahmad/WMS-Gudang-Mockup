@@ -29,6 +29,8 @@ export default function Scanner2Mockup() {
 
   const [savedMappings, setSavedMappings] = useState([]);
   const [showAddLocater, setShowAddLocater] = useState(false);
+  const [availableProducts, setAvailableProducts] = useState([]);
+  const [showProductSelector, setShowProductSelector] = useState(false);
 
   const arrScanned = scanned?.split("#");
   const ttba = arrScanned?.[0]?.replace(/\//g, "-");
@@ -39,8 +41,7 @@ export default function Scanner2Mockup() {
   const arrTipeItem = product.map(
     (item) => `${item?.Item_TypeGroup?.toLowerCase()}`
   );
-
-  console.log("savedMappings", product);
+  console.log("product", product);
 
   async function fetchProduct() {
     try {
@@ -231,15 +232,15 @@ export default function Scanner2Mockup() {
         0
       );
 
-      if (product[0].TTBA_VATQTY !== totalVats) {
-        Swal.fire({
-          title: "Perhatian!",
-          text: `Silahkan scan seluruh vat (${totalVats} / ${product[0].TTBA_VATQTY})`,
-          icon: "warning",
-          confirmButtonText: "OK",
-        });
-        return;
-      }
+      // if (product[0].TTBA_VATQTY !== totalVats) {
+      //   Swal.fire({
+      //     title: "Perhatian!",
+      //     text: `Silahkan scan seluruh vat (${totalVats} / ${product[0].TTBA_VATQTY})`,
+      //     icon: "warning",
+      //     confirmButtonText: "OK",
+      //   });
+      //   return;
+      // }
 
       for (const mapping of allMappings) {
         await insertBulkProductToRackMock({
@@ -311,15 +312,15 @@ export default function Scanner2Mockup() {
   const handleCreate = async (e) => {
     e.preventDefault();
     try {
-      if (product[0].TTBA_VATQTY !== product.length) {
-        Swal.fire({
-          title: "Perhatian!",
-          text: `Silahkan scan seluruh vat (${product.length} / ${product[0].TTBA_VATQTY})`,
-          icon: "warning",
-          confirmButtonText: "OK",
-        });
-        return;
-      }
+      // if (product[0].TTBA_VATQTY !== product.length) {
+      //   Swal.fire({
+      //     title: "Perhatian!",
+      //     text: `Silahkan scan seluruh vat (${product.length} / ${product[0].TTBA_VATQTY})`,
+      //     icon: "warning",
+      //     confirmButtonText: "OK",
+      //   });
+      //   return;
+      // }
 
       const productsWithLocation = product.map((item) => ({
         ...item,
@@ -465,8 +466,7 @@ export default function Scanner2Mockup() {
             {product.length > 0 && (
               <p className="text-lg font-semibold text-gray-700">
                 Total Karton ={" "}
-                {savedMappings.reduce((acc, mapping) => acc + mapping.DNc_TTBANo_Arr.length, 0) +
-                  product.length}
+                {product[0].TTBA_VATQTY}
                 {" / "}
                 {product[0].TTBA_VATQTY}
               </p>
@@ -486,62 +486,64 @@ export default function Scanner2Mockup() {
                     <th>ED Product</th>
                     <th>Status</th>
                   </tr>
-                  {product.map((item, idx) => (
-                    <tr key={getDncTtba(item)}>
-                      <td className="border border-gray-300">{idx + 1}</td>
-                      <td className="border border-gray-300">{item?.No_analisa}</td>
-                      <td className="border border-gray-300">
-                        {item?.item_name} {item?.ttba_itemid}
-                      </td>
-                      <td className="border border-gray-300">
-                        {item?.TTBA_qty_per_Vat} {item?.ttba_itemUnit}
-                      </td>
-                      <td className="border border-gray-300">
-                        {item?.ttba_vatno} dari {item?.TTBA_VATQTY}
-                      </td>
-                      <td className="border border-gray-300">{item?.Tgl_daluarsa}</td>
-                      <td className="border border-gray-300">
-                        {item?.Status === "Release" ? (
-                          <span className="font-semibold bg-green-400 p-1 rounded-md">
-                            Release
-                          </span>
-                        ) : item?.Status === "Reject" ? (
-                          <span className="font-semibold bg-red-300 p-1 rounded-md">
-                            Reject
-                          </span>
-                        ) : (
-                          <span className="font-semibold bg-orange-300 p-1 rounded-md">
-                            Karantina
-                          </span>
-                        )}
-                        <button
-                          className="btn btn-square btn-xs ml-4 mt-2"
-                          onClick={() =>
-                            handleDeleteListProduct(
-                              item?.TTBA_No,
-                              item?.TTBA_SeqID,
-                              item?.ttba_vatno
-                            )
-                          }
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-4 w-4"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="red"
+                  {product.flatMap((item, productIdx) =>
+                    Array.from({ length: item.TTBA_VATQTY }, (_, vatIdx) => (
+                      <tr key={`${getDncTtba(item)}-${vatIdx + 1}`}>
+                        <td className="border border-gray-300">{productIdx + 1}</td>
+                        <td className="border border-gray-300">{item?.No_analisa}</td>
+                        <td className="border border-gray-300">
+                          {item?.item_name} {item?.ttba_itemid}
+                        </td>
+                        <td className="border border-gray-300">
+                          {item?.TTBA_qty_per_Vat} {item?.ttba_itemUnit}
+                        </td>
+                        <td className="border border-gray-300">
+                          {vatIdx + 1} dari {item?.TTBA_VATQTY}
+                        </td>
+                        <td className="border border-gray-300">{item?.Tgl_daluarsa}</td>
+                        <td className="border border-gray-300">
+                          {item?.Status === "Release" ? (
+                            <span className="font-semibold bg-green-400 p-1 rounded-md">
+                              Release
+                            </span>
+                          ) : item?.Status === "Reject" ? (
+                            <span className="font-semibold bg-red-300 p-1 rounded-md">
+                              Reject
+                            </span>
+                          ) : (
+                            <span className="font-semibold bg-orange-300 p-1 rounded-md">
+                              Karantina
+                            </span>
+                          )}
+                          <button
+                            className="btn btn-square btn-xs ml-4 mt-2"
+                            onClick={() =>
+                              handleDeleteListProduct(
+                                item?.TTBA_No,
+                                item?.TTBA_SeqID,
+                                vatIdx + 1
+                              )
+                            }
                           >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M6 18L18 6M6 6l12 12"
-                            />
-                          </svg>
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-4 w-4"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="red"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M6 18L18 6M6 6l12 12"
+                              />
+                            </svg>
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             ) : (

@@ -153,7 +153,7 @@ export default function ScannerRack3Mockup() {
           <div className="px-5 py-3">
             <div className="flex justify-between mt-2 mb-4">
               <p className="text-2xl font-bold text-gray-800">
-                Pemindahan Pemetaan Bahan
+                Pemindahan Pemetaan Produk
               </p>
               <button
                 className="btn btn-sm btn-success mr-4"
@@ -243,7 +243,7 @@ export default function ScannerRack3Mockup() {
                           </button>
                         </th>
                         <th>No. Bets</th>
-                        <th>No. TTBA</th>
+                        <th>NIE</th>
                         <th>Produk Name</th>
                         <th>Qty</th>
                         <th>No. Karton</th>

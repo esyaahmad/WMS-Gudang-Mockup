@@ -343,16 +343,16 @@ export default function StockOpnameYearlyMockup() {
                 <thead className="sticky top-0 bg-slate-300 z-10">
                   <tr>
                     <th className="sticky top-0 bg-slate-300 z-10">No.</th>
-                    <th className="sticky top-0 bg-slate-300 z-10">No. TTBA</th>
-                    <th className="sticky top-0 bg-slate-300 z-10">No. Analisa</th>
-                    <th className="sticky top-0 bg-slate-300 z-10">Nama Bahan</th>
+                    <th className="sticky top-0 bg-slate-300 z-10">NIE</th>
+                    <th className="sticky top-0 bg-slate-300 z-10">No. Bets</th>
+                    <th className="sticky top-0 bg-slate-300 z-10">Nama Produk</th>
                     <th className="sticky top-0 bg-slate-300 z-10">Lokasi</th>
-                    <th className="sticky top-0 bg-slate-300 z-10">Wadah</th>
-                    <th className="sticky top-0 bg-slate-300 z-10 text-center">Qty TTBA</th>
-                    <th className="sticky top-0 bg-slate-300 z-10 text-center">Qty WMS</th>
-                    <th className="sticky top-0 bg-slate-300 z-10 text-center">Qty Sampling</th>
+                    <th className="sticky top-0 bg-slate-300 z-10">Karton</th>
+                    {/* <th className="sticky top-0 bg-slate-300 z-10 text-center">Qty TTBA</th> */}
+                    <th className="sticky top-0 bg-slate-300 z-10 text-center">Qty System</th>
+                    {/* <th className="sticky top-0 bg-slate-300 z-10 text-center">Qty Sampling</th> */}
                     <th className="sticky top-0 bg-slate-300 z-10">Status</th>
-                    <th className="sticky top-0 bg-slate-300 z-10">Sampling</th>
+                    {/* <th className="sticky top-0 bg-slate-300 z-10">Sampling</th> */}
                     <th className="sticky top-0 bg-slate-300 z-10">Qty SO</th>
                     <th className="sticky top-0 bg-slate-300 z-10">Koreksi</th>
                   </tr>
@@ -370,13 +370,13 @@ export default function StockOpnameYearlyMockup() {
                         {item?.Rak ? `${item?.Rak}.${item?.Baris}.${item?.Kolom}` : "-"}
                       </td>
                       <td className="border border-gray-300">{item?.ttba_vatno}</td>
-                      <td className="border border-gray-300">
+                      {/* <td className="border border-gray-300">
                         {item?.TTBA_qty_per_Vat} {item?.ttba_itemUnit}
-                      </td>
+                      </td> */}
                       <td className="border border-gray-300">
                         {Math.round(item?.qtyWms * 1000) / 1000}
                       </td>
-                      <td className="border border-gray-300">{item?.QtySampling}</td>
+                      {/* <td className="border border-gray-300">{item?.QtySampling}</td> */}
                       <td className="border border-gray-300">
                         {item?.StatusVat === "Release" ? (
                           <span className="font-semibold bg-green-400 p-1 rounded-md">Release</span>
@@ -386,9 +386,9 @@ export default function StockOpnameYearlyMockup() {
                           <span className="font-semibold bg-orange-300 p-1 rounded-md">Karantina</span>
                         )}
                       </td>
-                      <td className="border border-gray-300">
+                      {/* <td className="border border-gray-300">
                         {item?.StatusSampling || "-"}
-                      </td>
+                      </td> */}
                       <td className="border border-gray-300 text-center">
                         <input
                           type="number"
