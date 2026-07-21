@@ -10,6 +10,7 @@ import Scanner2Mockup from './pages/Scanner2Mockup'
 import ScannerRack3Mockup from './pages/ScannerRack3Mockup'
 import StockOpnameYearlyMockup from './pages/StockOpnameYearlyMockup'
 import ScannerDetailTtbaMockup from './pages/ScannerDetailTtbaMockup'
+import UseBahanKemas2Mockup from './pages/UseBahanKemas2Mockup'
 
 const router = createBrowserRouter(
   [
@@ -32,6 +33,10 @@ const router = createBrowserRouter(
     {
       path: '/mock-scanner-detail-ttba',
       element: <ScannerDetailTtbaMockup />,
+    },
+    {
+      path: '/mock-use-bahan-kemas2',
+      element: <UseBahanKemas2Mockup />,
     },
   ],
   {

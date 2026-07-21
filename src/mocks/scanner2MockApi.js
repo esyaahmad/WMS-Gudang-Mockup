@@ -145,13 +145,17 @@ export async function insertBulkProductToRackMock({
     throw error;
   }
 
-  const mappedItems = products.map(
-    (item) => `${item.TTBA_No}#${item.TTBA_SeqID}#${item.ttba_vatno}`
+  const mappedItems = products.flatMap(
+    (item) => Array.from({ length: item.TTBA_VATQTY }, (_, idx) => 
+      `${item.TTBA_No}#${item.TTBA_SeqID}#${idx + 1}`
+    )
   );
 
   const allMapped = (savedMappings || []).flatMap((mapping) =>
-    mapping.products.map(
-      (item) => `${item.TTBA_No}#${item.TTBA_SeqID}#${item.ttba_vatno}`
+    mapping.products.flatMap(
+      (item) => Array.from({ length: item.TTBA_VATQTY }, (_, idx) => 
+        `${item.TTBA_No}#${item.TTBA_SeqID}#${idx + 1}`
+      )
     )
   );
 
@@ -566,6 +570,10 @@ export const quickDemoLabels = [
   "BK/2026/010#7#1",
   "BK/2026/010#7#2",
   "BK/2026/010#7#3",
+  "BK/2026/011#5#1",
+  "BK/2026/011#5#2",
+  "BK/2026/050#1#1",
+  "BK/2026/050#1#2",
   "BB/2026/404#1#1",
 ];
 
@@ -741,4 +749,328 @@ export async function fetchCekRackDetailMock({ noAnalisa, ttbaNo, seqId }) {
   }
 
   return stockData;
+}
+
+// ─────── UseBahanKemas2 mock data ──────────────────────────────────────────
+
+const USE_BK_BON_LIST = [
+  {
+    MR_No: "00055/II/24/PN1/MR",
+    MR_SeqID: 1,
+    MR_ItemID: "A 228",
+    Product_Name: "ALUFOIL BLISTER",
+    MR_BatchNo: "BK-BATCH-001",
+    MR_DNcQTY: 1,
+    MR_DNcNo: "DNC-BK-0107",
+    MR_ItemUnit: "kg",
+  },
+  {
+    MR_No: "00055/II/24/PN1/MR",
+    MR_SeqID: 2,
+    MR_ItemID: "A 229",
+    Product_Name: "PVC SHEET",
+    MR_BatchNo: "BK-BATCH-002",
+    MR_DNcQTY: 0.5,
+    MR_DNcNo: "DNC-BK-0108",
+    MR_ItemUnit: "kg",
+  },
+  {
+    MR_No: "00078/III/24/PN3/MR",
+    MR_SeqID: 1,
+    MR_ItemID: "A 300",
+    Product_Name: "LABEL ROLL",
+    MR_BatchNo: "BK-BATCH-003",
+    MR_DNcQTY: 300,
+    MR_DNcNo: "DNC-BK-0110",
+    MR_ItemUnit: "pcs",
+  },
+];
+
+const USE_BK_VATS_BY_BON = {
+  "00055/II/24/PN1/MR|1|A 228|DNC-BK-0107": [
+    {
+      Lokasi: "BK2",
+      Rak: "K1",
+      Baris: "1",
+      Kolom: "1",
+      DNc_No: "DNC-BK-0107",
+      Item_ID: "A 228",
+      Item_Name: "ALUFOIL BLISTER",
+      Qty: 400,
+      DNc_TTBANo: "BK/2026/010#7#1",
+    },
+    {
+      Lokasi: "BK2",
+      Rak: "K1",
+      Baris: "1",
+      Kolom: "2",
+      DNc_No: "DNC-BK-0107",
+      Item_ID: "A 228",
+      Item_Name: "ALUFOIL BLISTER",
+      Qty: 350,
+      DNc_TTBANo: "BK/2026/010#7#2",
+    },
+    {
+      Lokasi: "AF2",
+      Rak: "A1",
+      Baris: "1",
+      Kolom: "1",
+      DNc_No: "DNC-BK-0107",
+      Item_ID: "A 228",
+      Item_Name: "ALUFOIL BLISTER",
+      Qty: 500,
+      DNc_TTBANo: "BK/2026/010#7#3",
+    },
+  ],
+  "00055/II/24/PN1/MR|2|A 229|DNC-BK-0108": [
+    {
+      Lokasi: "BK2",
+      Rak: "K2",
+      Baris: "1",
+      Kolom: "1",
+      DNc_No: "DNC-BK-0108",
+      Item_ID: "A 229",
+      Item_Name: "PVC SHEET",
+      Qty: 250,
+      DNc_TTBANo: "BK/2026/011#5#1",
+    },
+    {
+      Lokasi: "BK2",
+      Rak: "K2",
+      Baris: "1",
+      Kolom: "2",
+      DNc_No: "DNC-BK-0108",
+      Item_ID: "A 229",
+      Item_Name: "PVC SHEET",
+      Qty: 250,
+      DNc_TTBANo: "BK/2026/011#5#2",
+    },
+  ],
+  "00078/III/24/PN3/MR|1|A 300|DNC-BK-0110": [
+    {
+      Lokasi: "BK2",
+      Rak: "K3",
+      Baris: "1",
+      Kolom: "1",
+      DNc_No: "DNC-BK-0110",
+      Item_ID: "A 300",
+      Item_Name: "LABEL ROLL",
+      Qty: 150,
+      DNc_TTBANo: "BK/2026/050#1#1",
+    },
+    {
+      Lokasi: "BK2",
+      Rak: "K3",
+      Baris: "1",
+      Kolom: "2",
+      DNc_No: "DNC-BK-0110",
+      Item_ID: "A 300",
+      Item_Name: "LABEL ROLL",
+      Qty: 150,
+      DNc_TTBANo: "BK/2026/050#1#2",
+    },
+  ],
+};
+
+const USE_BK_WITHDRAWAL_RECORDS = [];
+
+function makeUseBkKey(mrNo, mrSeqId, itemId, dncNo) {
+  return `${mrNo}|${mrSeqId}|${itemId}|${dncNo}`;
+}
+
+function findUseBkBon(mrNo, mrSeqId, itemId, dncNo) {
+  return USE_BK_BON_LIST.find(
+    (row) =>
+      row.MR_No === mrNo &&
+      Number(row.MR_SeqID) === Number(mrSeqId) &&
+      row.MR_ItemID === itemId &&
+      row.MR_DNcNo === dncNo
+  );
+}
+
+export async function fetchBonKeluarUseBKMock(searchTerm) {
+  await wait();
+
+  const keyword = String(searchTerm || "").toLowerCase();
+  const result = USE_BK_BON_LIST.filter((row) =>
+    String(row.MR_BatchNo || "").toLowerCase().includes(keyword)
+  );
+
+  if (result.length === 0) {
+    const error = new Error("Data bon tidak ditemukan");
+    error.response = { data: { message: "Data bon tidak ditemukan" } };
+    throw error;
+  }
+
+  return result;
+}
+
+export async function fetchBonKeluarUseBKByMRMock(searchTerm) {
+  await wait();
+
+  const keyword = String(searchTerm || "").toLowerCase();
+  const result = USE_BK_BON_LIST.filter((row) =>
+    String(row.MR_No || "").toLowerCase().includes(keyword)
+  );
+
+  if (result.length === 0) {
+    const error = new Error("Data bon tidak ditemukan");
+    error.response = { data: { message: "Data bon tidak ditemukan" } };
+    throw error;
+  }
+
+  return result;
+}
+
+export async function fetchDetailVatFromBonMock({
+  formatedItemId,
+  formatedMR_NoAnalisa,
+  MrNo,
+  MrSeqId,
+}) {
+  await wait();
+
+  const key = makeUseBkKey(MrNo, MrSeqId, formatedItemId, formatedMR_NoAnalisa);
+  const vats = USE_BK_VATS_BY_BON[key] || [];
+
+  if (vats.length === 0) {
+    const error = new Error("No Item untuk ditimbang");
+    error.response = { data: { message: "No Item untuk ditimbang" } };
+    throw error;
+  }
+
+  return vats;
+}
+
+export async function createPpicListManualBKMock({ selectedVats, selectedItem }) {
+  await wait();
+
+  if (!Array.isArray(selectedVats) || selectedVats.length === 0) {
+    const error = new Error("Belum ada vat yang dipilih");
+    error.response = { data: { message: "Belum ada vat yang dipilih" } };
+    throw error;
+  }
+
+  const bon = findUseBkBon(
+    selectedItem?.MR_No,
+    selectedItem?.MR_SeqID,
+    selectedItem?.MR_ItemID,
+    selectedItem?.MR_NoAnalisa
+  );
+
+  if (!bon) {
+    const error = new Error("Data bon tidak ditemukan");
+    error.response = { data: { message: "Data bon tidak ditemukan" } };
+    throw error;
+  }
+
+  const requested =
+    String(selectedItem?.MR_ItemUnit || "").toLowerCase() === "kg"
+      ? Number(selectedItem?.MR_DNcQTY || 0) * 1000
+      : Number(selectedItem?.MR_DNcQTY || 0);
+  const totalSelected = selectedVats.reduce((sum, item) => sum + Number(item?.Qty || 0), 0);
+
+  if (Number(totalSelected.toFixed(3)) !== Number(requested.toFixed(3))) {
+    const error = new Error("Jumlah penarikan belum sesuai dengan MR");
+    error.response = { data: { message: "Jumlah penarikan belum sesuai dengan MR" } };
+    throw error;
+  }
+
+  const key = makeUseBkKey(
+    selectedItem?.MR_No,
+    selectedItem?.MR_SeqID,
+    selectedItem?.MR_ItemID,
+    selectedItem?.MR_NoAnalisa
+  );
+  const vats = USE_BK_VATS_BY_BON[key] || [];
+
+  for (const selected of selectedVats) {
+    const target = vats.find((row) => row.DNc_TTBANo === selected.DNc_TTBANo);
+    if (!target) {
+      const error = new Error(`Vat ${selected.DNc_TTBANo} tidak ditemukan`);
+      error.response = { data: { message: `Vat ${selected.DNc_TTBANo} tidak ditemukan` } };
+      throw error;
+    }
+
+    if (Number(target.Qty) < Number(selected.Qty)) {
+      const error = new Error(`Qty vat ${selected.DNc_TTBANo} tidak mencukupi`);
+      error.response = { data: { message: `Qty vat ${selected.DNc_TTBANo} tidak mencukupi` } };
+      throw error;
+    }
+
+    target.Qty = Number((Number(target.Qty) - Number(selected.Qty)).toFixed(3));
+  }
+
+  const now = new Date().toISOString();
+  for (const selected of selectedVats) {
+    USE_BK_WITHDRAWAL_RECORDS.push({
+      MR_No: selectedItem?.MR_No,
+      MR_SeqID: selectedItem?.MR_SeqID,
+      MR_ItemID: selectedItem?.MR_ItemID,
+      MR_DNcNo: selectedItem?.MR_NoAnalisa,
+      Process_Date: now,
+      No_VAT: selected.No_Vat,
+      Nett_Gram: selected.Qty,
+      DNc_TTBANo: selected.DNc_TTBANo,
+      type: "BK",
+      sourceKey: key,
+    });
+  }
+
+  return { message: "Bahan berhasil ditarik untuk produksi" };
+}
+
+export async function getListTimbangManualBatalScanMock({ type, mr_no, dnc_no }) {
+  await wait();
+
+  const result = USE_BK_WITHDRAWAL_RECORDS.filter((row) => {
+    const matchType = String(row.type || "") === String(type || "");
+    const matchMr = String(row.MR_No || "").toLowerCase().includes(String(mr_no || "").toLowerCase());
+    const matchDnc = String(row.MR_DNcNo || "").toLowerCase().includes(String(dnc_no || "").toLowerCase());
+    return matchType && matchMr && matchDnc;
+  });
+
+  return result;
+}
+
+export async function undoWithdrawPpicBkMock(checkedData) {
+  await wait();
+
+  const toUndo = USE_BK_WITHDRAWAL_RECORDS.filter(
+    (row) =>
+      row.MR_No === checkedData?.MR_No &&
+      Number(row.MR_SeqID) === Number(checkedData?.MR_SeqID) &&
+      row.MR_ItemID === checkedData?.MR_ItemID &&
+      row.MR_DNcNo === checkedData?.MR_DNcNo &&
+      row.type === checkedData?.type
+  );
+
+  if (toUndo.length === 0) {
+    const error = new Error("Data withdrawal tidak ditemukan");
+    error.response = { data: { message: "Data withdrawal tidak ditemukan" } };
+    throw error;
+  }
+
+  for (const row of toUndo) {
+    const vats = USE_BK_VATS_BY_BON[row.sourceKey] || [];
+    const vat = vats.find((v) => v.DNc_TTBANo === row.DNc_TTBANo);
+    if (vat) {
+      vat.Qty = Number((Number(vat.Qty) + Number(row.Nett_Gram)).toFixed(3));
+    }
+  }
+
+  for (let i = USE_BK_WITHDRAWAL_RECORDS.length - 1; i >= 0; i--) {
+    const row = USE_BK_WITHDRAWAL_RECORDS[i];
+    const isTarget =
+      row.MR_No === checkedData?.MR_No &&
+      Number(row.MR_SeqID) === Number(checkedData?.MR_SeqID) &&
+      row.MR_ItemID === checkedData?.MR_ItemID &&
+      row.MR_DNcNo === checkedData?.MR_DNcNo &&
+      row.type === checkedData?.type;
+    if (isTarget) {
+      USE_BK_WITHDRAWAL_RECORDS.splice(i, 1);
+    }
+  }
+
+  return { message: "Undo berhasil" };
 }

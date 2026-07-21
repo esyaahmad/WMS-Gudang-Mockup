@@ -21,6 +21,7 @@ const DUMMY_MENUS = {
     { label: "Mock ScannerRack3 — Pemindahan Bahan", page: "mock-scannerrack3" },
     { label: "Mock Stock Opname Bahan Baku", page: "mock-stockopname-yearly" },
     { label: "Mock Label Identitas", page: "mock-scanner-detail-ttba" },
+    { label: "Mock Ambil Bahan Kemas (Produksi)", page: "mock-use-bahan-kemas2" },
   ],
 };
 
@@ -74,7 +75,7 @@ export default function NavbarDummy() {
             className="flex items-center gap-2"
           >
             <MdLayers size={28} className="text-yellow-400" />
-            <div className="text-xl font-bold">WMS Gudang Mockup</div>
+            <div className="text-xl font-bold">WMS Gudang Obat Jadi</div>
           </button>
 
           <div className="p-2 hidden md:block">
