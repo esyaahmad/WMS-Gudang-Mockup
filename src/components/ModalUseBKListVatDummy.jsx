@@ -183,95 +183,92 @@ export default function ModalUseBKListVatDummy({ isOpen, onClose, selectedItem }
   }, [scanned]);
 
   return (
-    <>
-      <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-        <div className="bg-white p-6 rounded-md shadow-lg w-full max-w-3xl h-auto max-h-[80vh] overflow-auto">
-          <div className="flex justify-between">
-            <button className="btn btn-sm btn-danger" onClick={onClose}>
-              Close
+    <div className="modal-overlay" onClick={onClose}>
+      <div
+        className="modal-panel p-6 w-full max-w-3xl"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <div className="flex flex-wrap justify-between items-center gap-3">
+          <button className="btn-modern-danger" onClick={onClose}>
+            Close
+          </button>
+          <h1 className="text-lg font-bold text-gray-800 dark:text-gray-100">
+            Jumlah Penarikan: {mrAmountModal}
+          </h1>
+          <h1 className="text-lg font-bold text-gray-800 dark:text-gray-100">
+            List Wadah Bahan
+          </h1>
+        </div>
+        {openQr && (
+          <div className="mt-4">
+            <button className="btn-modern-primary mb-3" onClick={handleToggleQr}>
+              {openQr ? "Close" : "Open"} Scan Label
             </button>
-
-            <span>
-              <h1 className="text-xl font-bold">Jumlah Penarikan: {mrAmountModal}</h1>
-            </span>
-            <span>
-              <h1 className="text-xl font-bold">List Wadah Bahan</h1>
-            </span>
+            <QrScannerDummy setScanned={setScanned} />
           </div>
-          {openQr && (
-            <div>
-              <button
-                className="btn btn-sm text-white bg-teal-400 mt-4"
-                onClick={handleToggleQr}
-              >
-                {openQr ? "Close" : "Open"} Scan Label
-              </button>
-              <QrScannerDummy setScanned={setScanned} />
+        )}
+
+        <div className="mt-4 overflow-auto max-h-72 rounded-lg border border-gray-100 dark:border-gray-700">
+          {loading && (
+            <div className="flex justify-center py-3 text-muted">
+              <p>Loading....</p>
             </div>
           )}
-
-          <div className="mt-4 overflow-auto max-h-72">
-            {loading && (
-              <div className="flex justify-center">
-                <p>Loading....</p>
-              </div>
-            )}
-            <table className="table-xs w-full">
-              <thead>
-                <tr>
-                  <th className="border px-4 py-2">Lokasi</th>
-                  <th className="border px-4 py-2">TTBA</th>
-                  <th className="border px-4 py-2">No. Analisa</th>
-                  <th className="border px-4 py-2">Item ID</th>
-                  <th className="border px-4 py-2">Item Name</th>
-                  <th className="border px-4 py-2">Qty</th>
-                  <th className="border px-4 py-2">No. Wadah</th>
-                  <th className="border px-4 py-2">Action</th>
+          <table className="table-modern">
+            <thead>
+              <tr>
+                <th>Lokasi</th>
+                <th>NIE</th>
+                <th>No. BETS</th>
+                <th>Produk Kode</th>
+                <th>Produk Name</th>
+                <th>Qty</th>
+                <th>No. Karton</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {dataVat.map((item, index) => (
+                <tr key={index}>
+                  <td>
+                    {item?.Lokasi}/{item?.Rak}/{item?.Baris}/{item?.Kolom}
+                  </td>
+                  <td>
+                    {item?.DNc_TTBANo.split("#")[0]} ({item?.DNc_TTBANo.split("#")[1]})
+                  </td>
+                  <td>{item?.DNc_No}</td>
+                  <td>{item?.Item_ID}</td>
+                  <td>{item?.Item_Name}</td>
+                  <td>{item?.Qty}</td>
+                  <td>{getLastNumberFromDNC(item?.DNc_TTBANo)}</td>
+                  <td>
+                    <button
+                      className="btn-modern-primary py-1 px-2.5 text-xs"
+                      onClick={() => handleSelectButtonClick(item)}
+                      disabled={isVatSelected(
+                        getLastNumberFromDNC(item?.DNc_TTBANo),
+                        item?.DNc_No,
+                        item?.DNc_TTBANo
+                      )}
+                    >
+                      Scan
+                    </button>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {dataVat.map((item, index) => (
-                  <tr key={index}>
-                    <td className="border px-4 py-2">
-                      {item?.Lokasi}/{item?.Rak}/{item?.Baris}/{item?.Kolom}
-                    </td>
-                    <td className="border px-4 py-2">
-                      {item?.DNc_TTBANo.split("#")[0]} ({item?.DNc_TTBANo.split("#")[1]})
-                    </td>
-                    <td className="border px-4 py-2">{item?.DNc_No}</td>
-                    <td className="border px-4 py-2">{item?.Item_ID}</td>
-                    <td className="border px-4 py-2">{item?.Item_Name}</td>
-                    <td className="border px-4 py-2">{item?.Qty}</td>
-                    <td className="border px-4 py-2">{getLastNumberFromDNC(item?.DNc_TTBANo)}</td>
-                    <td className="border px-4 py-2">
-                      <button
-                        className="btn btn-sm btn-primary"
-                        onClick={() => handleSelectButtonClick(item)}
-                        disabled={isVatSelected(
-                          getLastNumberFromDNC(item?.DNc_TTBANo),
-                          item?.DNc_No,
-                          item?.DNc_TTBANo
-                        )}
-                      >
-                        Scan
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          {confirmEnabled && (
-            <button
-              className="btn btn-sm btn-success mt-4"
-              onClick={handleConfirm}
-              disabled={loading}
-            >
-              {loading ? "Loading..." : "Confirm"}
-            </button>
-          )}
+              ))}
+            </tbody>
+          </table>
         </div>
+        {confirmEnabled && (
+          <button
+            className="btn-modern bg-emerald-600 text-white hover:bg-emerald-700 hover:shadow-md mt-4"
+            onClick={handleConfirm}
+            disabled={loading}
+          >
+            {loading ? "Loading..." : "Confirm"}
+          </button>
+        )}
       </div>
-    </>
+    </div>
   );
 }

@@ -1,10 +1,17 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { LuUser } from "react-icons/lu";
 import { RxHamburgerMenu } from "react-icons/rx";
-import { MdLayers } from "react-icons/md";
+import {
+  MdQrCodeScanner,
+  MdOutlineHome,
+  MdPublic,
+  MdLightMode,
+  MdDarkMode,
+} from "react-icons/md";
 import { IoMdClose } from "react-icons/io";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
-import LiveDateTime from "./Widgets/LiveDateTime";
+import WorldClock from "./Widgets/WorldClock";
+import useTheme from "../hooks/useTheme";
 import { NAMA_PROGRAM } from "../config/config";
 
 const DUMMY_USER = {
@@ -25,162 +32,260 @@ const DUMMY_MENUS = {
   ],
 };
 
+const SCANNER_PAGE = "mock-scanner-detail-ttba";
+
 export default function NavbarDummy() {
-  const [openMobileNav, setOpenMobileNav] = useState(false);
+  const { theme, toggleTheme } = useTheme();
+  const [openMenu, setOpenMenu] = useState(false);
   const [openSubMenu, setOpenSubMenu] = useState(null);
-  const [openSubMenuProfile, setOpenSubMenuProfile] = useState(false);
+  const [openWorldTime, setOpenWorldTime] = useState(false);
+  const [openProfile, setOpenProfile] = useState(false);
 
-  const subMenuRef = useRef(null);
-  const subMenuProfileRef = useRef(null);
-
-  useEffect(() => {
-    if (openSubMenu) setOpenSubMenuProfile(false);
-  }, [openSubMenu]);
+  const anyPanelOpen = openMenu || openWorldTime || openProfile;
 
   useEffect(() => {
-    if (openSubMenuProfile) setOpenSubMenu(null);
-  }, [openSubMenuProfile]);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (subMenuRef.current && !subMenuRef.current.contains(event.target)) {
-        setOpenSubMenu(null);
-      }
-      if (subMenuProfileRef.current && !subMenuProfileRef.current.contains(event.target)) {
-        setOpenSubMenuProfile(false);
-      }
+    document.body.style.overflow = anyPanelOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [anyPanelOpen]);
+
+  useEffect(() => {
+    const handleEscape = (event) => {
+      if (event.key === "Escape") closeAllPanels();
+    };
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
   }, []);
 
-  const toggleSubMenu = (_menuId) => {
-    setOpenSubMenu(openSubMenu === _menuId ? null : _menuId);
+  const closeAllPanels = () => {
+    setOpenMenu(false);
+    setOpenSubMenu(null);
+    setOpenWorldTime(false);
+    setOpenProfile(false);
+  };
+
+  const toggleSubMenu = (menuId) => {
+    setOpenSubMenu(openSubMenu === menuId ? null : menuId);
   };
 
   const handleNavigate = (page) => {
-    setOpenSubMenu(null);
-    setOpenSubMenuProfile(false);
-    setOpenMobileNav(false);
+    closeAllPanels();
     window.location.href = `/${NAMA_PROGRAM}/${page}`;
   };
 
+  const showOnly = (panel) => {
+    setOpenMenu(panel === "menu");
+    setOpenWorldTime(panel === "worldtime");
+    setOpenProfile(panel === "profile");
+  };
+
   return (
-    <nav className="z-[99] fixed top-0 left-0 w-full h-16 border-b border-primary bg-primary text-white flex items-center">
-      <div className="mx-4 md:mx-8 w-full flex justify-between items-center">
-        <div className="flex items-center gap-4">
+    <>
+      <button
+        type="button"
+        title={theme === "dark" ? "Mode Terang" : "Mode Gelap"}
+        onClick={toggleTheme}
+        className="fixed z-[99] top-4 right-4 w-10 h-10 rounded-full bg-white dark:bg-gray-800 text-gray-600 dark:text-yellow-300 shadow-lg border border-gray-100 dark:border-gray-700 flex items-center justify-center hover:scale-105 active:scale-95 transition"
+      >
+        {theme === "dark" ? <MdLightMode size={19} /> : <MdDarkMode size={19} />}
+      </button>
+
+      {anyPanelOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 z-[100]"
+          onClick={closeAllPanels}
+        />
+      )}
+
+      <div
+        className={`fixed z-[101] top-0 right-0 h-full w-[85%] max-w-sm bg-white dark:bg-gray-800 shadow-2xl transition-transform duration-300 ${
+          openMenu ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        <div className="flex items-center justify-between px-5 py-4 border-b border-emerald-700 bg-primary text-white">
+          <span className="font-bold text-lg">Menu</span>
+          <button type="button" onClick={closeAllPanels}>
+            <IoMdClose size={22} />
+          </button>
+        </div>
+        <div className="overflow-y-auto h-[calc(100%-64px)] py-2">
+          {Object.keys(DUMMY_MENUS).map((menu) => (
+            <div key={menu} className="border-b border-gray-100 dark:border-gray-700">
+              <button
+                type="button"
+                onClick={() => toggleSubMenu(menu)}
+                className="w-full flex items-center justify-between px-5 py-3 font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/50"
+              >
+                <span>{menu}</span>
+                {openSubMenu === menu ? (
+                  <FaChevronUp size={12} />
+                ) : (
+                  <FaChevronDown size={12} />
+                )}
+              </button>
+              {openSubMenu === menu && (
+                <ul className="bg-gray-50 dark:bg-gray-900/40 pb-2">
+                  {DUMMY_MENUS[menu].map((subMenu) => (
+                    <li key={subMenu.label}>
+                      <button
+                        type="button"
+                        onClick={() => handleNavigate(subMenu.page)}
+                        className="w-full text-left px-8 py-2.5 text-sm text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-emerald-400 hover:bg-white dark:hover:bg-gray-800 transition"
+                      >
+                        {subMenu.label}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {openWorldTime && (
+        <div
+          className="fixed z-[101] inset-0 flex items-start sm:items-center justify-center p-4 pt-20 sm:pt-4"
+          onClick={closeAllPanels}
+        >
+          <div
+            className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-sm overflow-hidden"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="flex items-center justify-between px-4 py-3 bg-primary text-white">
+              <span className="font-bold flex items-center gap-2">
+                <MdPublic size={18} /> World Time
+              </span>
+              <button type="button" onClick={closeAllPanels}>
+                <IoMdClose size={20} />
+              </button>
+            </div>
+            <WorldClock />
+          </div>
+        </div>
+      )}
+
+      {openProfile && (
+        <div
+          className="fixed z-[101] inset-0 flex items-start sm:items-center justify-center p-4 pt-20 sm:pt-4"
+          onClick={closeAllPanels}
+        >
+          <div
+            className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-sm overflow-hidden"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="flex items-center justify-between px-4 py-3 bg-primary text-white">
+              <span className="font-bold">Profil Pengguna</span>
+              <button type="button" onClick={closeAllPanels}>
+                <IoMdClose size={20} />
+              </button>
+            </div>
+            <div className="p-5 flex flex-col items-center gap-2">
+              <div className="w-16 h-16 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center">
+                <LuUser size={32} className="text-primary" />
+              </div>
+              <p className="font-bold text-gray-800 dark:text-gray-100">
+                {DUMMY_USER.Nama}
+              </p>
+              <p className="text-xs text-gray-400 dark:text-gray-500">
+                {DUMMY_USER.log_NIK}
+              </p>
+              <div className="w-full mt-3 text-sm divide-y divide-gray-100 dark:divide-gray-700">
+                <div className="flex justify-between py-2">
+                  <span className="text-gray-500 dark:text-gray-400">Jabatan</span>
+                  <span className="font-medium text-gray-700 dark:text-gray-200">
+                    {DUMMY_USER.Jabatan}
+                  </span>
+                </div>
+                <div className="flex justify-between py-2">
+                  <span className="text-gray-500 dark:text-gray-400">Departemen</span>
+                  <span className="font-medium text-gray-700 dark:text-gray-200">
+                    {DUMMY_USER.emp_DeptID}
+                  </span>
+                </div>
+                <div className="flex justify-between py-2">
+                  <span className="text-gray-500 dark:text-gray-400">Level</span>
+                  <span className="font-medium text-gray-700 dark:text-gray-200">
+                    {DUMMY_USER.emp_JobLevelID}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center py-2">
+                  <span className="text-gray-500 dark:text-gray-400">
+                    Mode Tampilan
+                  </span>
+                  <button
+                    type="button"
+                    onClick={toggleTheme}
+                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-xs font-semibold text-gray-600 dark:text-gray-200"
+                  >
+                    {theme === "dark" ? (
+                      <>
+                        <MdDarkMode size={14} /> Gelap
+                      </>
+                    ) : (
+                      <>
+                        <MdLightMode size={14} /> Terang
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <nav className="fixed z-[99] bottom-0 left-0 w-full h-16 bg-white/95 dark:bg-gray-800/95 backdrop-blur border-t border-gray-200 dark:border-gray-700 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] flex items-stretch">
+        <div className="w-full max-w-xl sm:max-w-2xl mx-auto flex items-stretch">
           <button
             type="button"
             onClick={() => handleNavigate("")}
-            className="flex items-center gap-2"
+            className="flex-1 flex flex-col items-center justify-center gap-0.5 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-emerald-400 transition"
           >
-            <MdLayers size={28} className="text-yellow-400" />
-            <div className="text-xl font-bold">WMS Gudang Obat Jadi</div>
+            <MdOutlineHome size={22} />
+            <span className="text-[11px] font-medium">Home</span>
           </button>
 
-          <div className="p-2 hidden md:block">
-            <ul className="flex flex-col md:flex-row gap-2">
-              {Object.keys(DUMMY_MENUS).map((menu) => (
-                <li key={menu} className="relative">
-                  <button
-                    onClick={() => toggleSubMenu(menu)}
-                    className={`flex items-center justify-between px-3 py-1.5 rounded transition duration-300 hover:bg-forest-green-100 hover:text-tertiary ${
-                      openSubMenu === menu
-                        ? "bg-forest-green-100 text-tertiary opacity-70"
-                        : "bg-transparent text-white"
-                    }`}
-                  >
-                    <span>{menu}</span>
-                    <span className="ml-1">
-                      {openSubMenu === menu ? (
-                        <FaChevronUp size={10} />
-                      ) : (
-                        <FaChevronDown size={10} />
-                      )}
-                    </span>
-                  </button>
+          <button
+            type="button"
+            onClick={() => showOnly(openMenu ? null : "menu")}
+            className="flex-1 flex flex-col items-center justify-center gap-0.5 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-emerald-400 transition"
+          >
+            <RxHamburgerMenu size={20} />
+            <span className="text-[11px] font-medium">Menu</span>
+          </button>
 
-                  {openSubMenu === menu && (
-                    <div className="absolute z-[99] w-fit min-w-[250px] top-full left-0 mt-6 bg-white rounded border shadow py-2">
-                      <ul className="overflow-y-auto max-h-[600px]">
-                        {DUMMY_MENUS[menu].map((subMenu) => (
-                          <li key={subMenu.label}>
-                            <button
-                              type="button"
-                              onClick={() => handleNavigate(subMenu.page)}
-                              className="w-full text-left block py-2 pl-4 pr-6 whitespace-nowrap text-gray-900 rounded transition duration-200 hover:bg-gray-100 hover:text-primary"
-                            >
-                              {subMenu.label}
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        <div className="h-16 hidden md:flex items-center">
-          <div className="flex items-center gap-3">
-            <LiveDateTime />
-            <div className="divider divider-horizontal mx-2 h-8"></div>
+          <div className="flex-1 flex items-center justify-center relative">
             <button
-              onClick={() => setOpenSubMenuProfile(!openSubMenuProfile)}
-              className="flex items-center gap-2 px-3 py-1.5 rounded hover:bg-opacity-20 hover:bg-white transition"
+              type="button"
+              title="Scan Label"
+              onClick={() => handleNavigate(SCANNER_PAGE)}
+              className="absolute -top-6 w-14 h-14 rounded-full bg-gradient-to-br from-primary to-emerald-600 text-white shadow-lg flex items-center justify-center ring-4 ring-white dark:ring-gray-800 active:scale-95 transition"
             >
-              <LuUser size={20} />
-              <span className="text-sm font-semibold">{DUMMY_USER.Nama}</span>
-              <span className="text-xs">▼</span>
+              <MdQrCodeScanner size={26} />
             </button>
           </div>
-        </div>
 
-        <button
-          className="md:hidden flex items-center justify-center"
-          onClick={() => setOpenMobileNav(!openMobileNav)}
-        >
-          {openMobileNav ? (
-            <IoMdClose size={24} />
-          ) : (
-            <RxHamburgerMenu size={24} />
-          )}
-        </button>
-      </div>
+          <button
+            type="button"
+            onClick={() => showOnly(openWorldTime ? null : "worldtime")}
+            className="flex-1 flex flex-col items-center justify-center gap-0.5 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-emerald-400 transition"
+          >
+            <MdPublic size={20} />
+            <span className="text-[11px] font-medium">Waktu</span>
+          </button>
 
-      {openMobileNav && (
-        <div className="md:hidden absolute top-16 left-0 w-full bg-primary text-white p-4 shadow-lg max-h-[calc(100vh-64px)] overflow-y-auto">
-          <ul className="space-y-2">
-            {Object.keys(DUMMY_MENUS).map((menu) => (
-              <li key={menu}>
-                <button
-                  onClick={() => toggleSubMenu(menu)}
-                  className="w-full text-left px-4 py-2 rounded hover:bg-opacity-20 hover:bg-white flex justify-between items-center"
-                >
-                  <span>{menu}</span>
-                  {openSubMenu === menu ? <FaChevronUp size={12} /> : <FaChevronDown size={12} />}
-                </button>
-                {openSubMenu === menu && (
-                  <ul className="pl-4 space-y-1 mt-2">
-                    {DUMMY_MENUS[menu].map((subMenu) => (
-                      <li key={subMenu.label}>
-                        <button
-                          onClick={() => handleNavigate(subMenu.page)}
-                          className="w-full text-left px-4 py-1 text-sm rounded hover:bg-opacity-20 hover:bg-white"
-                        >
-                          {subMenu.label}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </li>
-            ))}
-          </ul>
+          <button
+            type="button"
+            onClick={() => showOnly(openProfile ? null : "profile")}
+            className="flex-1 flex flex-col items-center justify-center gap-0.5 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-emerald-400 transition"
+          >
+            <LuUser size={20} />
+            <span className="text-[11px] font-medium">Profil</span>
+          </button>
         </div>
-      )}
-    </nav>
+      </nav>
+    </>
   );
 }

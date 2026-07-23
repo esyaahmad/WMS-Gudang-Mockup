@@ -175,26 +175,28 @@ export default function ScannerDetailTtbaMockup() {
   return (
     <>
       <NavbarDummy />
-      <div className="mt-16">
-        <div className="px-5 py-3">
-          <div className="flex justify-between mt-2 mb-4">
-            <p className="text-2xl font-bold text-gray-800">Label Identitas</p>
-            <button
-              className="btn btn-sm bg-teal-400 text-white"
-              onClick={() => setOpenQr(!openQr)}
-            >
-              {openQr ? "Close" : "Open"} Scan Label
-            </button>
-          </div>
+      <div className="pb-24 min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
+        <div className="max-w-4xl mx-auto pt-8 px-4 sm:px-6">
+          <div className="surface-card p-5 mb-4">
+            <div className="flex justify-between items-center gap-3 mb-4">
+              <p className="heading-page">Label Identitas</p>
+              <button
+                className="btn-modern-primary"
+                onClick={() => setOpenQr(!openQr)}
+              >
+                {openQr ? "Close" : "Open"} Scan Label
+              </button>
+            </div>
 
-          {openQr && <QrScannerDummy setScanned={setScanned} />}
-        </div>
+            {openQr && <QrScannerDummy setScanned={setScanned} />}
+          </div>
 
         <div>
           {product.length > 0 ? (
             <>
-              <div className="flex ml-5">
-                <p className="font-bold">
+              <div className="surface-card p-5 mb-4">
+              <div className="flex ml-1">
+                <p className="font-bold text-rose-600 dark:text-rose-400">
                   {(ttbaLastSegment == "LL" &&
                     productScanned?.TTBA_NoAnalisa != "" &&
                     product[0]?.Status == "Karantina") ||
@@ -203,50 +205,46 @@ export default function ScannerDetailTtbaMockup() {
                     : null}
                 </p>
               </div>
-              <div className="flex ml-5">
-                <p className="text-l font-bold text-gray-800">No. Bets</p>
-                <p className="ml-12">: {productScanned?.No_analisa}</p>
+              <div className="flex items-center flex-wrap gap-2 ml-1 mb-3">
+                <p className="text-l font-bold text-gray-800 dark:text-gray-100">
+                  No. Bets
+                </p>
+                <p className="ml-2 text-gray-700 dark:text-gray-300">
+                  : {productScanned?.No_analisa}
+                </p>
                 {productScanned?.Status === "Release" ? (
-                  <span className="font-semibold bg-green-200 mx-2 rounded-md px-2">
-                    {productScanned?.Status}
-                  </span>
+                  <span className="badge-release">{productScanned?.Status}</span>
                 ) : productScanned?.Status === "Reject" ? (
-                  <span className="font-semibold bg-red-200 mx-2 rounded-md px-2">
-                    {productScanned?.Status}
-                  </span>
+                  <span className="badge-reject">{productScanned?.Status}</span>
                 ) : productScanned?.Status === "Karantina" ? (
-                  <span className="font-semibold bg-orange-200 mx-2 rounded-md px-2">
-                    {productScanned?.Status}
-                  </span>
+                  <span className="badge-karantina">{productScanned?.Status}</span>
                 ) : (
-                  <span className="font-semibold bg-orange-200 mx-2 rounded-md px-2">
-                    Karantina
-                  </span>
+                  <span className="badge-karantina">Karantina</span>
                 )}
                 {displayValue ? (
-                  <span className="font-bold">{`(${displayValue})`}</span>
+                  <span className="font-bold text-gray-800 dark:text-gray-100">{`(${displayValue})`}</span>
                 ) : (
                   " "
                 )}
                 {productScanned?.Status_2 ? (
-                  <span className="font-semibold">{`( ${productScanned?.Status_2} )`}</span>
+                  <span className="font-semibold text-gray-800 dark:text-gray-100">{`( ${productScanned?.Status_2} )`}</span>
                 ) : (
                   " "
                 )}
               </div>
-              <div className="mx-5">
-                <table className="table-fixed">
+              <div>
+                <table className="w-full text-sm">
                   <tbody>
-                    <tr className="text-left">
-                      <th>Nama Produk</th>
-                      <td>
+                    <tr className="text-left align-top">
+                      <th className="py-1.5 pr-4 w-36 font-semibold text-gray-500 dark:text-gray-400">Nama Produk</th>
+                      <td className="py-1.5 text-gray-800 dark:text-gray-100">
                         :{" "}
                         {`${productScanned?.item_name} (${productScanned?.ttba_itemid})`}
                       </td>
                     </tr>
-                    <tr className="text-left">
-                      <th className="">NIE</th>
-                      <td>: {formatTTBA(ttba)}</td>
+                    <tr className="text-left align-top">
+                      <th className="py-1.5 pr-4 font-semibold text-gray-500 dark:text-gray-400">NIE</th>
+                      <td className="py-1.5 text-gray-800 dark:text-gray-100">: {formatTTBA(ttba)}</td>
                     </tr>
                     <tr className="text-left">
                       {/* <th className="">No. Bets/Lot</th>
@@ -278,9 +276,9 @@ export default function ScannerDetailTtbaMockup() {
                         )}
                       </td> */}
                     </tr>
-                    <tr className="text-left">
-                      <th className="">Exp Date</th>
-                      <td>
+                    <tr className="text-left align-top">
+                      <th className="py-1.5 pr-4 font-semibold text-gray-500 dark:text-gray-400">Exp Date</th>
+                      <td className="py-1.5 text-gray-800 dark:text-gray-100">
                         :{" "}
                         {productScanned?.best_before === "NA" ? (
                           <span>NA</span>
@@ -289,9 +287,9 @@ export default function ScannerDetailTtbaMockup() {
                         )}
                       </td>
                     </tr>
-                    <tr className="text-left">
-                      <th>Nomor Karton</th>
-                      <td>
+                    <tr className="text-left align-top">
+                      <th className="py-1.5 pr-4 font-semibold text-gray-500 dark:text-gray-400">Nomor Karton</th>
+                      <td className="py-1.5 text-gray-800 dark:text-gray-100">
                         : {productScanned?.ttba_vatno} dari{" "}
                         {productScanned?.TTBA_VATQTY}
                       </td>
@@ -303,9 +301,9 @@ export default function ScannerDetailTtbaMockup() {
                         {productScanned?.ttba_itemUnit}
                       </td> */}
                     </tr>
-                    <tr className="text-left">
-                      <th>Tipe Item</th>
-                      <td>
+                    <tr className="text-left align-top">
+                      <th className="py-1.5 pr-4 font-semibold text-gray-500 dark:text-gray-400">Tipe Item</th>
+                      <td className="py-1.5 text-gray-800 dark:text-gray-100">
                         : {productScanned?.Item_Type} {"("}
                         {productScanned?.Item_TypeGroup}
                         {")"}
@@ -322,9 +320,9 @@ export default function ScannerDetailTtbaMockup() {
                         )}
                       </td> */}
                     </tr>
-                    <tr className="text-left">
-                      <th className="">Approved By</th>
-                      <td>
+                    <tr className="text-left align-top">
+                      <th className="py-1.5 pr-4 font-semibold text-gray-500 dark:text-gray-400">Approved By</th>
+                      <td className="py-1.5 text-gray-800 dark:text-gray-100">
                         :{" "}
                         {!productScanned?.emp_Name ? (
                           <span>NA</span>
@@ -342,46 +340,35 @@ export default function ScannerDetailTtbaMockup() {
                   </tbody>
                 </table>
               </div>
+              </div>
 
-              <br />
-
-              <div className="flex-col justify-center">
-                <div className="flex ml-6">
-                  <p className="text-2xl font-bold text-gray-800">
-                    Detail Bahan
-                  </p>
-                </div>
-                <div className="flex justify-center max-w-full overflow-x-auto m-2">
-                  <table className="table table-xs border">
-                    <tbody>
-                      <tr className="bg-slate-200 ">
+              <div className="surface-card p-5 mb-4">
+                <p className="heading-page mb-3">Detail Bahan</p>
+                <div className="max-w-full overflow-x-auto">
+                  <table className="table-modern">
+                    <thead>
+                      <tr>
                         <th>No. Karton</th>
                         <th>Status</th>
                         <th>Qty Karton</th>
                         <th>Lokasi</th>
                         <th>Status Sampling</th>
                       </tr>
+                    </thead>
+                    <tbody>
                       {product?.map((item, idx) => (
                         <tr key={idx}>
-                          <td className="border border-gray-300">
-                            {item?.ttba_vatno}
-                          </td>
-                          <td className="border border-gray-300 p-2">
+                          <td>{item?.ttba_vatno}</td>
+                          <td>
                             {item?.Status === "Release" ? (
-                              <span className="font-semibold bg-green-400 p-1 rounded-md">
-                                Release
-                              </span>
+                              <span className="badge-release">Release</span>
                             ) : item?.Status === "Reject" ? (
-                              <span className="font-semibold bg-red-300 p-1 rounded-md">
-                                Reject
-                              </span>
+                              <span className="badge-reject">Reject</span>
                             ) : (
-                              <span className="font-semibold bg-orange-300 p-1 rounded-md">
-                                Karantina
-                              </span>
+                              <span className="badge-karantina">Karantina</span>
                             )}
                           </td>
-                          <td className="border border-gray-300">
+                          <td>
                             {cekGudangSampling?.some(
                               (itemRak) =>
                                 itemRak?.Dnc_no === `${item?.No_analisa}` &&
@@ -435,7 +422,7 @@ export default function ScannerDetailTtbaMockup() {
                                   ))
                               : "-"}
                           </td>
-                          <td className="border border-gray-300">
+                          <td>
                             {cekGudangSampling?.some(
                               (itemRak) =>
                                 itemRak?.Dnc_no === `${item?.No_analisa}` &&
@@ -468,9 +455,7 @@ export default function ScannerDetailTtbaMockup() {
                                   ))
                               : "-"}
                           </td>
-                          <td className="border border-gray-300">
-                            {item?.Status_2 ? item?.Status_2 : "-"}
-                          </td>
+                          <td>{item?.Status_2 ? item?.Status_2 : "-"}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -479,13 +464,12 @@ export default function ScannerDetailTtbaMockup() {
               </div>
             </>
           ) : (
-            <>
-              <div className="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4 m-5">
-                <p className="font-bold">Informasi</p>
-                <p>Silahkan Scan QR Label Bahan</p>
-              </div>
-            </>
+            <div className="alert-info-modern">
+              <p className="font-bold">Informasi</p>
+              <p>Silahkan Scan QR Label Bahan</p>
+            </div>
           )}
+        </div>
         </div>
       </div>
     </>

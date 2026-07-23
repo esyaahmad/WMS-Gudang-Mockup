@@ -58,20 +58,11 @@ export default function ScannerRack3Mockup() {
 
   function determineStatus(item) {
     if (item?.Status === "Reject") {
-      return {
-        status: "Reject",
-        className: "font-semibold bg-red-200 p-1 rounded-md",
-      };
+      return { status: "Reject", className: "badge-reject" };
     } else if (item?.Status === "Release") {
-      return {
-        status: "Release",
-        className: "font-semibold bg-green-200 p-1 rounded-md",
-      };
+      return { status: "Release", className: "badge-release" };
     } else {
-      return {
-        status: "Karantina",
-        className: "font-semibold bg-orange-200 p-1 rounded-md",
-      };
+      return { status: "Karantina", className: "badge-karantina" };
     }
   }
 
@@ -137,7 +128,7 @@ export default function ScannerRack3Mockup() {
   return (
     <>
       <NavbarDummy />
-      <div className="mt-16">
+      <div className="pb-24 min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
         {isModalOpen && (
           <ModalSwapRack3Dummy
             handleCloseModal={() => setIsModalOpen(false)}
@@ -149,14 +140,12 @@ export default function ScannerRack3Mockup() {
             setSelectedItems={setSelectedItems}
           />
         )}
-        <div className="mt-8 ">
-          <div className="px-5 py-3">
-            <div className="flex justify-between mt-2 mb-4">
-              <p className="text-2xl font-bold text-gray-800">
-                Pemindahan Pemetaan Produk
-              </p>
+        <div className="max-w-5xl mx-auto pt-8 px-4 sm:px-6">
+          <div className="surface-card p-5 mb-4">
+            <div className="flex justify-between items-center gap-3 mb-4">
+              <p className="heading-page">Pemindahan Pemetaan Produk</p>
               <button
-                className="btn btn-sm btn-success mr-4"
+                className="btn-modern bg-emerald-600 text-white hover:bg-emerald-700 hover:shadow-md"
                 onClick={() => setOpenQrRack(!openQrRack)}
               >
                 {openQrRack ? "Close" : "Open"} Scan Rak
@@ -174,56 +163,59 @@ export default function ScannerRack3Mockup() {
           <div>
             {rack.length > 0 ? (
               <>
-                <div className="flex justify-between mt-2 mb-4">
-                  <p className=" ml-4 text-2xl font-bold text-gray-800">
-                    {scannedRack} <br />
-                    <span className="text-xs text-gray-800">
-                      (Lokasi/Rak/Baris/Kolom)
-                    </span>
-                  </p>
-                  <input
-                    type="text"
-                    placeholder="Search by No. Bets"
-                    className="input input-bordered mx-4 input-md w-full max-w-md"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
-                <div className="flex justify-between m-2">
-                  <button
-                    className="btn bg-blue-500 text-white"
-                    onClick={() => {
-                      if (selectedItems.length === 0) {
-                        return toast.error("No items selected!");
-                      }
-                      setIsModalOpen(true);
-                    }}
-                  >
-                    Move Selected Items
-                  </button>
-                  <div>
-                    {scannedRack && (
-                      <button
-                        className="btn btn-sm bg-teal-500 text-white ml-2"
-                        onClick={() => setOpenQrLabelModal(true)}
-                      >
-                        Scan Label
-                      </button>
-                    )}
+                <div className="surface-card p-5 mb-4">
+                  <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 mb-4">
+                    <p className="heading-page">
+                      {scannedRack}
+                      <br />
+                      <span className="text-xs font-normal text-muted">
+                        (Lokasi/Rak/Baris/Kolom)
+                      </span>
+                    </p>
+                    <input
+                      type="text"
+                      placeholder="Search by No. Bets"
+                      className="input-modern sm:max-w-xs"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </div>
+                  <div className="flex flex-wrap justify-between gap-2">
                     <button
-                      className="btn btn-sm btn-error ml-2"
-                      onClick={handleResetSelection}
+                      className="btn-modern bg-sky-600 text-white hover:bg-sky-700 hover:shadow-md"
+                      onClick={() => {
+                        if (selectedItems.length === 0) {
+                          return toast.error("No items selected!");
+                        }
+                        setIsModalOpen(true);
+                      }}
                     >
-                      {selectedItems.length} Selected
-                      <span className="ml-1">✕</span>
+                      Move Selected Items
                     </button>
+                    <div className="flex gap-2">
+                      {scannedRack && (
+                        <button
+                          className="btn-modern bg-teal-600 text-white hover:bg-teal-700 hover:shadow-md"
+                          onClick={() => setOpenQrLabelModal(true)}
+                        >
+                          Scan Label
+                        </button>
+                      )}
+                      <button
+                        className="btn-modern-danger"
+                        onClick={handleResetSelection}
+                      >
+                        {selectedItems.length} Selected
+                        <span>✕</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
 
-                <div className="max-w-full overflow-x-auto">
-                  <table className="table table-xs mt-4">
+                <div className="surface-card overflow-hidden mb-4 max-w-full overflow-x-auto">
+                  <table className="table-modern">
                     <thead>
-                      <tr className="bg-slate-200">
+                      <tr>
                         <th>
                           <button
                             onClick={
@@ -256,11 +248,11 @@ export default function ScannerRack3Mockup() {
                           key={index}
                           className={
                             selectedItems.includes(item?.no_label)
-                              ? "bg-blue-100"
+                              ? "!bg-sky-50 dark:!bg-sky-900/30"
                               : ""
                           }
                         >
-                          <td className="border border-gray-300">
+                          <td>
                             <input
                               type="checkbox"
                               checked={selectedItems.includes(item?.no_label)}
@@ -269,20 +261,12 @@ export default function ScannerRack3Mockup() {
                               }
                             />
                           </td>
-                          <td className="border border-gray-300">
-                            {item.DNc_No}
-                          </td>
-                          <td className="border border-gray-300">
-                            {splitByHashTtba(item?.no_label)}
-                          </td>
-                          <td className="border border-gray-300">{`${item.Item_Name} ${item.item_ID}`}</td>
-                          <td className="border border-gray-300">
-                            {Math.round(item?.Qty * 1000) / 1000}
-                          </td>
-                          <td className="border border-gray-300">
-                            {splitByHashVatQty(item?.no_label)}
-                          </td>
-                          <td className="border border-gray-300">
+                          <td>{item.DNc_No}</td>
+                          <td>{splitByHashTtba(item?.no_label)}</td>
+                          <td>{`${item.Item_Name} ${item.item_ID}`}</td>
+                          <td>{Math.round(item?.Qty * 1000) / 1000}</td>
+                          <td>{splitByHashVatQty(item?.no_label)}</td>
+                          <td>
                             <span className={determineStatus(item).className}>
                               {determineStatus(item)?.status}
                             </span>
@@ -294,10 +278,7 @@ export default function ScannerRack3Mockup() {
                 </div>
               </>
             ) : (
-              <div
-                className="fixed bottom-0 w-full bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 m-5"
-                role="alert"
-              >
+              <div className="bg-sky-50 dark:bg-sky-900/30 border-l-4 border-sky-500 text-sky-700 dark:text-sky-300 p-4 rounded-r-lg mb-4">
                 <p className="font-bold">Informasi</p>
                 <p>Silahkan Scan QR Rak</p>
               </div>

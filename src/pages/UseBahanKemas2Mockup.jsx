@@ -110,49 +110,53 @@ export default function UseBahanKemas2Mockup() {
         type="BK"
       />
 
-      <div className="mt-16">
-        <div className="mt-8">
-          <div className="px-5 py-3">
-            <div className="flex justify-between mt-2 mb-4">
-              <p className="text-2xl font-bold text-gray-800">Withdraw Produk </p>
+      <div className="pb-24 min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
+        <div className="max-w-5xl mx-auto pt-8 px-4 sm:px-6">
+          <div className="surface-card p-5 mb-4">
+            <div className="flex justify-between items-center gap-3 mb-4">
+              <p className="heading-page">Withdraw Produk</p>
               <button
-                className="btn btn-sm text-white bg-red-400"
+                className="btn-modern-danger"
                 onClick={() => setOpenList(!openList)}
               >
                 Batal Scan
               </button>
             </div>
             <div className="flex justify-between gap-4 flex-col md:flex-row">
-              <div className="my-4 w-full">
-                <p>Cari Nomor Batch</p>
+              <div className="w-full">
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1.5">
+                  Cari Nomor Batch
+                </p>
                 <input
                   type="text"
                   placeholder="Enter search term"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="border border-gray-300 px-4 py-2 rounded-lg w-full mb-2"
+                  className="input-modern mb-2"
                 />
                 <button
                   onClick={handleSearchClick}
-                  className="btn btn-primary"
+                  className="btn-modern-primary"
                   disabled={searchTerm.length < 1}
                 >
                   Search
                 </button>
               </div>
 
-              <div className="my-4 w-full">
-                <p>Cari Nomor MR</p>
+              <div className="w-full">
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1.5">
+                  Cari Nomor MR
+                </p>
                 <input
                   type="text"
                   placeholder="Enter search term"
                   value={searchTerm2}
                   onChange={(e) => setSearchTerm2(e.target.value)}
-                  className="border border-gray-300 px-4 py-2 rounded-lg w-full mb-2"
+                  className="input-modern mb-2"
                 />
                 <button
                   onClick={handleSearchClick2}
-                  className="btn btn-primary"
+                  className="btn-modern-primary"
                   disabled={searchTerm2.length < 1}
                 >
                   Search
@@ -160,7 +164,7 @@ export default function UseBahanKemas2Mockup() {
               </div>
             </div>
 
-            <div className="bg-blue-50 border-l-4 border-blue-500 text-blue-900 p-4 rounded mt-2">
+            <div className="bg-sky-50 dark:bg-sky-900/30 border-l-4 border-sky-500 text-sky-900 dark:text-sky-200 p-4 rounded-r-lg mt-4">
               <p className="font-bold mb-2">Info Data Dummy Use Bahan Kemas</p>
               <div className="text-sm space-y-1">
                 <p>Search by Batch: BK-BATCH-001, BK-BATCH-002, BK-BATCH-003</p>
@@ -176,54 +180,53 @@ export default function UseBahanKemas2Mockup() {
               </div>
             </div>
           </div>
-          <div className="max-w-full overflow-x-auto px-2 md:px-4">
-            <table className="table-xs w-full">
-              <thead>
-                <tr>
-                  <th className="border px-4 py-2">Nomor Bon</th>
-                  <th className="border px-4 py-2">Nama Bahan</th>
-                  <th className="border px-4 py-2">No. Batch</th>
-                  <th className="border px-4 py-2">Qty Penarikan</th>
-                  <th className="border px-4 py-2">No. Analisa</th>
-                  <th className="border px-4 py-2">Satuan</th>
-                  <th className="border px-4 py-2">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredData.map((item, index) => (
-                  <tr key={index}>
-                    <td className="border px-4 py-2">
-                      {item?.MR_No} ({item?.MR_SeqID})
-                    </td>
-                    <td className="border px-4 py-2">
-                      {item?.Product_Name ? item?.Product_Name : "-"} ({item?.MR_ItemID ? item?.MR_ItemID : "-"})
-                    </td>
-                    <td className="border px-4 py-2">{item?.MR_BatchNo ? item?.MR_BatchNo : "-"}</td>
-                    <td className="border px-4 py-2">{item?.MR_DNcQTY}</td>
-                    <td className="border px-4 py-2">{item?.MR_DNcNo}</td>
-                    <td className="border px-4 py-2">{item?.MR_ItemUnit}</td>
-
-                    <td className="border px-4 py-2">
-                      <button
-                        className="btn btn-sm btn-primary"
-                        onClick={() =>
-                          handleSelectClick(
-                            item?.MR_No,
-                            item?.MR_SeqID,
-                            item?.MR_ItemID,
-                            item?.MR_DNcQTY,
-                            item?.MR_DNcNo,
-                            item?.MR_ItemUnit
-                          )
-                        }
-                      >
-                        Select
-                      </button>
-                    </td>
+          <div className="surface-card overflow-hidden">
+            <div className="max-w-full overflow-x-auto">
+              <table className="table-modern">
+                <thead>
+                  <tr>
+                    <th>Nomor Bon</th>
+                    <th>Nama Bahan</th>
+                    <th>No. Batch</th>
+                    <th>Qty Penarikan</th>
+                    <th>Satuan</th>
+                    <th>Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {filteredData.map((item, index) => (
+                    <tr key={index}>
+                      <td>
+                        {item?.MR_No} ({item?.MR_SeqID})
+                      </td>
+                      <td>
+                        {item?.Product_Name ? item?.Product_Name : "-"} ({item?.MR_ItemID ? item?.MR_ItemID : "-"})
+                      </td>
+                      <td>{item?.MR_BatchNo ? item?.MR_BatchNo : "-"}</td>
+                      <td>{item?.MR_DNcQTY}</td>
+                      <td>{item?.MR_ItemUnit}</td>
+                      <td>
+                        <button
+                          className="btn-modern-primary py-1.5 px-3 text-xs"
+                          onClick={() =>
+                            handleSelectClick(
+                              item?.MR_No,
+                              item?.MR_SeqID,
+                              item?.MR_ItemID,
+                              item?.MR_DNcQTY,
+                              item?.MR_DNcNo,
+                              item?.MR_ItemUnit
+                            )
+                          }
+                        >
+                          Select
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>

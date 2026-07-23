@@ -14,13 +14,13 @@ export default function QrScannerRackDummy({ setScannedRack, quickOptions }) {
   const options = quickOptions ?? quickDemoRacks;
 
   return (
-    <div className="qr-reader border border-slate-200 rounded p-3 bg-white">
-      <span className="flex justify-center bg-green-600 text-black font-semibold mb-3 p-1 rounded">
+    <div className="qr-reader border border-slate-200 dark:border-gray-700 rounded-xl p-4 bg-white dark:bg-gray-800">
+      <span className="flex justify-center bg-emerald-600 text-white font-semibold mb-3 py-1.5 rounded-lg">
         QR Rak (Dummy)
       </span>
-      <div className="join w-full mb-2">
+      <div className="flex gap-2 w-full mb-3">
         <input
-          className="input input-bordered join-item w-full"
+          className="input-modern"
           placeholder="Contoh: BB2/R1/1/1"
           value={value}
           onChange={(e) => setValue(e.target.value)}
@@ -28,7 +28,7 @@ export default function QrScannerRackDummy({ setScannedRack, quickOptions }) {
             if (e.key === "Enter") submit();
           }}
         />
-        <button className="btn join-item btn-secondary" onClick={submit}>
+        <button className="btn-modern-primary" onClick={submit}>
           Scan
         </button>
       </div>
@@ -36,7 +36,7 @@ export default function QrScannerRackDummy({ setScannedRack, quickOptions }) {
         {options.map((rackCode) => (
           <button
             key={rackCode}
-            className="btn btn-xs"
+            className="btn-modern-outline py-1 px-2.5 text-xs"
             onClick={() => setScannedRack(rackCode)}
           >
             {rackCode}

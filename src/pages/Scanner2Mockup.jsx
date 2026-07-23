@@ -428,13 +428,13 @@ export default function Scanner2Mockup() {
   return (
     <>
       <NavbarDummy />
-      <div className="mt-16">
-        <div className="mt-8 ">
-          <div className="px-5 py-3">
-            <div className="flex justify-between mt-2 mb-4">
-              <p className="text-2xl font-bold text-gray-800">Pemetaan Bahan</p>
+      <div className="pb-24 min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
+        <div className="max-w-4xl mx-auto pt-8 px-4 sm:px-6">
+          <div className="surface-card p-5 mb-4">
+            <div className="flex justify-between items-center gap-3 mb-4">
+              <p className="heading-page">Pemetaan Bahan</p>
               <button
-                className="btn btn-sm text-white bg-teal-400"
+                className="btn-modern-primary"
                 onClick={handleToggleQr}
               >
                 {openQr ? "Close" : "Open"} Scan Label
@@ -444,165 +444,172 @@ export default function Scanner2Mockup() {
           </div>
 
           {savedMappings.length > 0 && (
-            <div className="mx-5 mb-4">
-              <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
-                <p className="font-bold text-blue-800 mb-2">Pemetaan yang Sudah Disimpan:</p>
-                {savedMappings.map((mapping, idx) => (
-                  <div key={idx} className="mb-3 pb-3 border-b border-blue-200 last:border-b-0">
-                    <p className="font-semibold text-blue-700">
-                      Pemetaan {idx + 1} - Rak: {mapping.scannedRack}
+            <div className="mb-4 surface-card border-l-4 border-l-sky-500 p-4">
+              <p className="font-bold text-sky-700 dark:text-sky-400 mb-2">
+                Pemetaan yang Sudah Disimpan:
+              </p>
+              {savedMappings.map((mapping, idx) => (
+                <div
+                  key={idx}
+                  className="mb-3 pb-3 border-b border-sky-100 dark:border-gray-700 last:border-b-0 last:mb-0 last:pb-0"
+                >
+                  <p className="font-semibold text-sky-700 dark:text-sky-400">
+                    Pemetaan {idx + 1} - Rak: {mapping.scannedRack}
+                  </p>
+                  <div className="ml-4 mt-1">
+                    <p className="text-sm text-gray-700 dark:text-gray-300">
+                      Total Karton: {mapping.products.length}
                     </p>
-                    <div className="ml-4 mt-1">
-                      <p className="text-sm text-gray-700">Total Karton: {mapping.products.length}</p>
-                      <p className="text-xs text-gray-600">TTBA: {mapping.DNc_TTBANo_Arr.join(", ")}</p>
-                    </div>
+                    <p className="text-xs text-muted">
+                      TTBA: {mapping.DNc_TTBANo_Arr.join(", ")}
+                    </p>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           )}
 
-          <div className="px-5">
-            {product.length > 0 && (
-              <p className="text-lg font-semibold text-gray-700">
-                Total Karton ={" "}
-                {product[0].TTBA_VATQTY}
-                {" / "}
-                {product[0].TTBA_VATQTY}
-              </p>
-            )}
-          </div>
+          {product.length > 0 && (
+            <p className="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2">
+              Total Karton = {product[0].TTBA_VATQTY} / {product[0].TTBA_VATQTY}
+            </p>
+          )}
 
           <div className="max-w-full overflow-x-auto">
             {product.length > 0 ? (
-              <table className="table table-xs border m-4">
-                <tbody>
-                  <tr className="bg-slate-300">
-                    <th>No.</th>
-                    <th>No. Bets</th>
-                    <th>Nama Produk</th>
-                    <th>Qty</th>
-                    <th>No. Karton</th>
-                    <th>ED Product</th>
-                    <th>Status</th>
-                  </tr>
-                  {product.flatMap((item, productIdx) =>
-                    Array.from({ length: item.TTBA_VATQTY }, (_, vatIdx) => (
-                      <tr key={`${getDncTtba(item)}-${vatIdx + 1}`}>
-                        <td className="border border-gray-300">{productIdx + 1}</td>
-                        <td className="border border-gray-300">{item?.No_analisa}</td>
-                        <td className="border border-gray-300">
-                          {item?.item_name} {item?.ttba_itemid}
-                        </td>
-                        <td className="border border-gray-300">
-                          {item?.TTBA_qty_per_Vat} {item?.ttba_itemUnit}
-                        </td>
-                        <td className="border border-gray-300">
-                          {vatIdx + 1} dari {item?.TTBA_VATQTY}
-                        </td>
-                        <td className="border border-gray-300">{item?.Tgl_daluarsa}</td>
-                        <td className="border border-gray-300">
-                          {item?.Status === "Release" ? (
-                            <span className="font-semibold bg-green-400 p-1 rounded-md">
-                              Release
-                            </span>
-                          ) : item?.Status === "Reject" ? (
-                            <span className="font-semibold bg-red-300 p-1 rounded-md">
-                              Reject
-                            </span>
-                          ) : (
-                            <span className="font-semibold bg-orange-300 p-1 rounded-md">
-                              Karantina
-                            </span>
-                          )}
-                          <button
-                            className="btn btn-square btn-xs ml-4 mt-2"
-                            onClick={() =>
-                              handleDeleteListProduct(
-                                item?.TTBA_No,
-                                item?.TTBA_SeqID,
-                                vatIdx + 1
-                              )
-                            }
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-4 w-4"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="red"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M6 18L18 6M6 6l12 12"
-                              />
-                            </svg>
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
+              <div className="surface-card overflow-hidden mb-4">
+                <table className="table-modern">
+                  <thead>
+                    <tr>
+                      <th>No.</th>
+                      <th>No. Bets</th>
+                      <th>Nama Produk</th>
+                      <th>Qty</th>
+                      <th>No. Karton</th>
+                      <th>ED Product</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {product.flatMap((item, productIdx) =>
+                      Array.from({ length: item.TTBA_VATQTY }, (_, vatIdx) => (
+                        <tr key={`${getDncTtba(item)}-${vatIdx + 1}`}>
+                          <td>{productIdx + 1}</td>
+                          <td>{item?.No_analisa}</td>
+                          <td>
+                            {item?.item_name} {item?.ttba_itemid}
+                          </td>
+                          <td>
+                            {item?.TTBA_qty_per_Vat} {item?.ttba_itemUnit}
+                          </td>
+                          <td>
+                            {vatIdx + 1} dari {item?.TTBA_VATQTY}
+                          </td>
+                          <td>{item?.Tgl_daluarsa}</td>
+                          <td>
+                            <div className="flex items-center gap-2">
+                              {item?.Status === "Release" ? (
+                                <span className="badge-release">Release</span>
+                              ) : item?.Status === "Reject" ? (
+                                <span className="badge-reject">Reject</span>
+                              ) : (
+                                <span className="badge-karantina">
+                                  Karantina
+                                </span>
+                              )}
+                              <button
+                                type="button"
+                                title="Hapus"
+                                className="w-7 h-7 flex items-center justify-center rounded-md text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/30 transition"
+                                onClick={() =>
+                                  handleDeleteListProduct(
+                                    item?.TTBA_No,
+                                    item?.TTBA_SeqID,
+                                    vatIdx + 1
+                                  )
+                                }
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  className="h-4 w-4"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M6 18L18 6M6 6l12 12"
+                                  />
+                                </svg>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
             ) : (
-              <div
-                className="fixed bottom-0 w-full bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4 m-5"
-                role="alert"
-              >
+              <div className="alert-info-modern mb-4" role="alert">
                 <p className="font-bold">Informasi</p>
                 <p>Silahkan Scan QR Produk</p>
               </div>
             )}
           </div>
 
-          <div className="flex justify-center m-5">
+          <div className="flex justify-center mb-4">
             {product.length > 0 && (
               <button
-                className="btn btn-sm btn-warning"
+                className="btn-modern bg-amber-500 text-white hover:bg-amber-600 hover:shadow-md"
                 onClick={handleToggleQrRack}
               >
                 {openQrRack ? "Close" : "Open"} Scan Rak
               </button>
             )}
           </div>
-          {openQrRack && <QrScannerRackDummy setScannedRack={setScannedRack} />}
+          {openQrRack && (
+            <div className="mb-4">
+              <QrScannerRackDummy setScannedRack={setScannedRack} />
+            </div>
+          )}
 
           {scannedRack && rack?.length !== 0 && (
-            <>
-              <div className="px-5 py-3">
-                <table className="table">
-                  <tbody>
-                    <tr>
-                      <th>Lokasi</th>
-                      <td>{rack[0]?.Lokasi}</td>
-                    </tr>
-                    <tr>
-                      <th>Rak</th>
-                      <td>{rack[0]?.Rak}</td>
-                    </tr>
-                    <tr>
-                      <th>Qty</th>
-                      <td>{rack[0]?.Qty}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </>
+            <div className="surface-card overflow-hidden mb-4">
+              <table className="table-modern">
+                <tbody>
+                  <tr>
+                    <th>Lokasi</th>
+                    <td>{rack[0]?.Lokasi}</td>
+                  </tr>
+                  <tr>
+                    <th>Rak</th>
+                    <td>{rack[0]?.Rak}</td>
+                  </tr>
+                  <tr>
+                    <th>Qty</th>
+                    <td>{rack[0]?.Qty}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           )}
 
           {scannedRack && rack?.length === 0 && (
             <>
-              <div className="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md m-5">
-                <p className="font-bold">Rak {scannedRack} ({tipeRak}) - Rak Kosong</p>
+              <div className="bg-teal-50 dark:bg-teal-900/30 border-t-4 border-teal-500 rounded-b-lg text-teal-900 dark:text-teal-200 px-4 py-3 shadow-sm mb-4">
+                <p className="font-bold">
+                  Rak {scannedRack} ({tipeRak}) - Rak Kosong
+                </p>
               </div>
-              <div className="m-5">
+              <div className="mb-8">
                 <form action="">
                   <div className="flex gap-3">
                     {showAddLocater && (
                       <button
-                        className="flex-1 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
+                        className="flex-1 btn-modern bg-emerald-600 text-white hover:bg-emerald-700 hover:shadow-md py-2.5"
                         type="button"
                         onClick={handleAddLocater}
                         disabled={
@@ -623,7 +630,7 @@ export default function Scanner2Mockup() {
                     <button
                       className={`${
                         showAddLocater ? "flex-1" : "w-full"
-                      } bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-4`}
+                      } btn-modern bg-sky-600 text-white hover:bg-sky-700 hover:shadow-md py-2.5`}
                       type="submit"
                       onClick={(e) =>
                         savedMappings.length > 0
@@ -631,7 +638,10 @@ export default function Scanner2Mockup() {
                           : handleSubmit(e)
                       }
                     >
-                      Submit {savedMappings.length > 0 ? `(${savedMappings.length + 1} Locater)` : ""}
+                      Submit{" "}
+                      {savedMappings.length > 0
+                        ? `(${savedMappings.length + 1} Locater)`
+                        : ""}
                     </button>
                   </div>
                 </form>

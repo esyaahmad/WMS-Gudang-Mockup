@@ -22,94 +22,96 @@ const ModalListOpnameDummy = ({ isOpen, onClose, type, scannedRack }) => {
   const totalSelisih = totalQtySO - totalQtyWMS;
 
   return (
-    <>
-      <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-        <div
-          className="bg-white p-6 rounded-md shadow-lg max-h-[80vh] flex flex-col"
-          style={{ width: "90vw" }}
-        >
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold">
-              List Opname {type} {scannedRack ? `- Rak: ${scannedRack.split("/").slice(1).join(".")}` : ""}
-            </h2>
-            <button
-              className="px-3 py-1 text-white bg-red-500 rounded-md hover:bg-red-600"
-              onClick={onClose}
-            >
-              Close
-            </button>
-          </div>
+    <div className="modal-overlay" onClick={onClose}>
+      <div
+        className="surface-panel p-6 max-h-[80vh] flex flex-col"
+        style={{ width: "90vw" }}
+        onClick={(event) => event.stopPropagation()}
+      >
+        <div className="flex justify-between items-center mb-4 gap-3">
+          <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">
+            List Opname {type} {scannedRack ? `- Rak: ${scannedRack.split("/").slice(1).join(".")}` : ""}
+          </h2>
+          <button className="btn-modern-danger" onClick={onClose}>
+            Close
+          </button>
+        </div>
 
-          <div className="overflow-y-auto flex-1 mb-4">
-            <table className="table table-xs border">
-              <thead className="sticky top-0 bg-slate-300">
-                <tr>
-                  <th className="border">No.</th>
-                  <th className="border">DNc No</th>
-                  <th className="border">TTBA No</th>
-                  <th className="border">Nama Item</th>
-                  <th className="border">Vat</th>
-                  <th className="border">Qty WMS</th>
-                  <th className="border">Qty SO</th>
-                  <th className="border">Selisih</th>
-                  <th className="border">Tgl Proses</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentData.map((item, idx) => (
-                  <tr key={`${item.DNc_No}-${item.ttba_vatno}`}>
-                    <td className="border text-center">{indexOfFirstItem + idx + 1}</td>
-                    <td className="border">{item.DNc_No}</td>
-                    <td className="border">{item.TTBA_No}</td>
-                    <td className="border">{item.item_name}</td>
-                    <td className="border text-center">{item.ttba_vatno}</td>
-                    <td className="border text-center">{Math.round(item.Qty * 1000) / 1000}</td>
-                    <td className="border text-center">{Math.round(item.qty_so * 1000) / 1000}</td>
-                    <td className="border text-center">
-                      {Math.round((item.qty_so - item.Qty) * 1000) / 1000}
-                    </td>
-                    <td className="border text-xs">
-                      {new Date(item.Process_Date).toLocaleDateString()}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-              <tfoot className="bg-slate-200 font-bold">
-                <tr>
-                  <td colSpan="5" className="border text-right p-2">
-                    TOTAL:
+        <div className="overflow-y-auto flex-1 mb-4 rounded-lg border border-gray-100 dark:border-gray-700">
+          <table className="table-modern">
+            <thead className="sticky top-0 z-10">
+              <tr>
+                <th>No.</th>
+                <th>No. Bets</th>
+                <th>NIE</th>
+                <th>Nama Produk</th>
+                <th>Karton</th>
+                <th>Qty System</th>
+                <th>Qty SO</th>
+                <th>Selisih</th>
+                <th>Tgl Proses</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentData.map((item, idx) => (
+                <tr key={`${item.DNc_No}-${item.ttba_vatno}`}>
+                  <td className="text-center">{indexOfFirstItem + idx + 1}</td>
+                  <td>{item.DNc_No}</td>
+                  <td>{item.TTBA_No}</td>
+                  <td>{item.item_name}</td>
+                  <td className="text-center">{item.ttba_vatno}</td>
+                  <td className="text-center">{Math.round(item.Qty * 1000) / 1000}</td>
+                  <td className="text-center">{Math.round(item.qty_so * 1000) / 1000}</td>
+                  <td className="text-center">
+                    {Math.round((item.qty_so - item.Qty) * 1000) / 1000}
                   </td>
-                  <td className="border text-center">{Math.round(totalQtyWMS * 1000) / 1000}</td>
-                  <td className="border text-center">{Math.round(totalQtySO * 1000) / 1000}</td>
-                  <td className="border text-center">{Math.round(totalSelisih * 1000) / 1000}</td>
-                  <td className="border"></td>
+                  <td className="text-xs">
+                    {new Date(item.Process_Date).toLocaleDateString()}
+                  </td>
                 </tr>
-              </tfoot>
-            </table>
-          </div>
+              ))}
+            </tbody>
+            <tfoot className="bg-gray-100 dark:bg-gray-700/70 font-bold text-gray-700 dark:text-gray-200">
+              <tr>
+                <td colSpan="5" className="text-right p-2 border-t border-gray-100 dark:border-gray-700">
+                  TOTAL:
+                </td>
+                <td className="text-center border-t border-gray-100 dark:border-gray-700">
+                  {Math.round(totalQtyWMS * 1000) / 1000}
+                </td>
+                <td className="text-center border-t border-gray-100 dark:border-gray-700">
+                  {Math.round(totalQtySO * 1000) / 1000}
+                </td>
+                <td className="text-center border-t border-gray-100 dark:border-gray-700">
+                  {Math.round(totalSelisih * 1000) / 1000}
+                </td>
+                <td className="border-t border-gray-100 dark:border-gray-700"></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
 
-          <div className="flex justify-between items-center">
-            <button
-              className="btn btn-sm"
-              onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-              disabled={currentPage === 1}
-            >
-              Previous
-            </button>
-            <span>
-              Page {currentPage} of {totalPages}
-            </span>
-            <button
-              className="btn btn-sm"
-              onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-              disabled={currentPage === totalPages}
-            >
-              Next
-            </button>
-          </div>
+        <div className="flex justify-between items-center">
+          <button
+            className="btn-modern-outline"
+            onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+          <span className="text-sm text-gray-600 dark:text-gray-300">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            className="btn-modern-outline"
+            onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

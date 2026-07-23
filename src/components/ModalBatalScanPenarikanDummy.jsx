@@ -109,81 +109,82 @@ export default function ModalBatalScanPenarikanDummy({ isOpen, onClose, type }) 
   };
 
   return (
-    <>
-      <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-        <div className="bg-white p-6 rounded-md shadow-lg w-full max-w-3xl max-h-[80vh] overflow-auto">
-          <div className="flex justify-between items-center mb-4">
-            {loading && <PreLoader />}
+    <div className="modal-overlay" onClick={onClose}>
+      {loading && <PreLoader />}
+      <div
+        className="modal-panel p-6 w-full max-w-3xl"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <div className="flex justify-end items-center mb-4">
+          <button className="btn-modern-danger" onClick={onClose}>
+            Close
+          </button>
+        </div>
+        <div className="mb-4">
+          <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1.5">
+            Cari Nomor Permintaan (Produksi)
+          </p>
+          <input
+            type="text"
+            placeholder="Enter MR No"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="input-modern mb-2"
+          />
+          <input
+            type="text"
+            placeholder="Enter No. Analisa"
+            value={searchTerm2}
+            onChange={(e) => setSearchTerm2(e.target.value)}
+            className="input-modern mb-2"
+          />
+          <button
+            onClick={handleSearchClick}
+            className="btn-modern-primary"
+            disabled={searchTerm2.length < 1 || searchTerm.length < 1}
+          >
+            Search
+          </button>
+        </div>
 
-            <button
-              className="px-3 py-1 text-white bg-red-500 rounded-md hover:bg-red-600"
-              onClick={onClose}
-            >
-              Close
-            </button>
-          </div>
-          <div className="my-4">
-            <p>Cari Nomor Permintaan (Produksi)</p>
-            <input
-              type="text"
-              placeholder="Enter MR No"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="border border-gray-300 px-4 py-2 rounded-lg w-full mb-2"
-            />
-            <input
-              type="text"
-              placeholder="Enter No. Analisa"
-              value={searchTerm2}
-              onChange={(e) => setSearchTerm2(e.target.value)}
-              className="border border-gray-300 px-4 py-2 rounded-lg w-full mb-2"
-            />
-            <button
-              onClick={handleSearchClick}
-              className="btn btn-primary"
-              disabled={searchTerm2.length < 1 || searchTerm.length < 1}
-            >
-              Search
-            </button>
-          </div>
-
-          <table className="table-auto table-xs w-full border-collapse border border-gray-300">
+        <div className="surface-card overflow-hidden mb-4">
+          <table className="table-modern">
             <thead>
               <tr>
-                <th className="border px-4 py-2">✔</th>
-                <th className="border px-4 py-2">MR. No</th>
-                <th className="border px-4 py-2">Kode Bahan</th>
-                <th className="border px-4 py-2">No. Analisa</th>
-                <th className="border px-4 py-2">Tgl. Penarikan</th>
-                <th className="border px-4 py-2">No. Vat</th>
-                <th className="border px-4 py-2">Qty</th>
+                <th>✔</th>
+                <th>MR. No</th>
+                <th>Kode Bahan</th>
+                <th>No. Analisa</th>
+                <th>Tgl. Penarikan</th>
+                <th>No. Vat</th>
+                <th>Qty</th>
               </tr>
             </thead>
             <tbody>
               {data.map((item, index) => (
                 <tr key={index}>
-                  <td className="border px-4 py-2 text-center">
+                  <td className="text-center">
                     <input
                       type="checkbox"
                       checked={checkedItems[index] || false}
                       onChange={(e) => handleCheck(item?.MR_SeqID, e.target.checked)}
                     />
                   </td>
-                  <td className="border px-4 py-2">
+                  <td>
                     {item?.MR_No} ({item?.MR_SeqID})
                   </td>
-                  <td className="border px-4 py-2">{item?.MR_ItemID}</td>
-                  <td className="border px-4 py-2">{item?.MR_DNcNo}</td>
-                  <td className="border px-4 py-2">{item?.Process_Date}</td>
-                  <td className="border px-4 py-2">{item?.No_VAT}</td>
-                  <td className="border px-4 py-2">{item?.Nett_Gram}</td>
+                  <td>{item?.MR_ItemID}</td>
+                  <td>{item?.MR_DNcNo}</td>
+                  <td>{item?.Process_Date}</td>
+                  <td>{item?.No_VAT}</td>
+                  <td>{item?.Nett_Gram}</td>
                 </tr>
               ))}
-              <tr className="font-bold bg-gray-100">
-                <td className="border px-4 py-2 text-center" colSpan={6}>
+              <tr className="font-bold bg-gray-100 dark:bg-gray-700/70">
+                <td className="text-center" colSpan={6}>
                   Total (Checked)
                 </td>
-                <td className="border px-4 py-2">
+                <td>
                   {data.reduce((sum, item, index) => {
                     if (checkedItems[index]) {
                       return sum + (Number(item?.Nett_Gram) || 0);
@@ -194,17 +195,17 @@ export default function ModalBatalScanPenarikanDummy({ isOpen, onClose, type }) 
               </tr>
             </tbody>
           </table>
-          <div className="mt-4 flex justify-end">
-            <button
-              className="btn btn-sm text-white bg-red-500"
-              onClick={handleUndoScan}
-              disabled={loading}
-            >
-              {loading ? "Loading..." : "Undo Scan"}
-            </button>
-          </div>
+        </div>
+        <div className="flex justify-end">
+          <button
+            className="btn-modern-danger"
+            onClick={handleUndoScan}
+            disabled={loading}
+          >
+            {loading ? "Loading..." : "Undo Scan"}
+          </button>
         </div>
       </div>
-    </>
+    </div>
   );
 }

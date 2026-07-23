@@ -68,7 +68,7 @@ export default function StockOpnameYearlyMockup() {
     } catch (error) {
       if (error?.response?.data?.message === "Pemetaan Gudang tidak ditemukan") {
         Swal.fire({
-          title: "Analisa tidak ditemukan!",
+          title: "Produk tidak ditemukan!",
           text: "Silahkan input Opname",
           icon: "warning",
           confirmButtonText: "OK",
@@ -220,7 +220,7 @@ export default function StockOpnameYearlyMockup() {
   return (
     <>
       <NavbarDummy />
-      <div className="mt-16">
+      <div className="pb-24 min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
         <ModalInputOpnameBKDummy
           isOpen={openModalInput}
           onClose={() => setOpenModalInput(false)}
@@ -235,22 +235,20 @@ export default function StockOpnameYearlyMockup() {
           type="BB"
           scannedRack={scannedRack}
         />
-        <div className="mt-8 ">
-          <div className="px-5 py-3">
-            <div className="flex justify-between mt-2 mb-4">
-              <p className="text-2xl font-bold text-gray-800">
-                Stock Opname Bahan Baku
-              </p>
+        <div className="max-w-6xl mx-auto pt-8 px-4 sm:px-6">
+          <div className="surface-card p-5 mb-4">
+            <div className="flex justify-between items-center gap-3 mb-4">
+              <p className="heading-page">Stock Opname Produk</p>
               <div className="flex gap-2">
                 <button
-                  className="btn btn-sm text-white bg-blue-400"
+                  className="btn-modern bg-sky-600 text-white hover:bg-sky-700 hover:shadow-md"
                   onClick={() => setOpenListOpname(!openListOpname)}
                   disabled={!scannedRack}
                 >
                   List Opname
                 </button>
                 <button
-                  className="btn btn-sm text-white bg-teal-400"
+                  className="btn-modern-primary"
                   onClick={handleToggleQr}
                   disabled={!scannedRack}
                 >
@@ -260,7 +258,7 @@ export default function StockOpnameYearlyMockup() {
             </div>
             <div>
               {scannedRack && (
-                <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 m-5 ">
+                <div className="bg-emerald-50 dark:bg-emerald-900/30 border-l-4 border-emerald-500 text-emerald-800 dark:text-emerald-200 p-4 rounded-r-lg mb-2">
                   <div>
                     <p className="font-bold">Rak yang dipilih:</p>
                     <p className="font-bold">
@@ -269,7 +267,7 @@ export default function StockOpnameYearlyMockup() {
                     </p>
                     <br />
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex flex-col sm:flex-row justify-between gap-4">
                     <pre className="font-mono font-bold text-xs">
                       {`Total Rak          : ${(Math.round(totalPerRak * 1000) / 1000).toFixed(3).padStart(10)}`}
                       {`\nTotal Rak SO       : ${filteredProducts
@@ -335,114 +333,109 @@ export default function StockOpnameYearlyMockup() {
                 </div>
               )}
             </div>
-            {openQr && <QrScannerDummy setScanned={setScanned} />}
-          </div>
-          <div className="max-w-full overflow-x-auto max-h-[750px] overflow-y-auto">
-            {product.length > 0 ? (
-              <table className="table table-xs border m-4">
-                <thead className="sticky top-0 bg-slate-300 z-10">
-                  <tr>
-                    <th className="sticky top-0 bg-slate-300 z-10">No.</th>
-                    <th className="sticky top-0 bg-slate-300 z-10">NIE</th>
-                    <th className="sticky top-0 bg-slate-300 z-10">No. Bets</th>
-                    <th className="sticky top-0 bg-slate-300 z-10">Nama Produk</th>
-                    <th className="sticky top-0 bg-slate-300 z-10">Lokasi</th>
-                    <th className="sticky top-0 bg-slate-300 z-10">Karton</th>
-                    {/* <th className="sticky top-0 bg-slate-300 z-10 text-center">Qty TTBA</th> */}
-                    <th className="sticky top-0 bg-slate-300 z-10 text-center">Qty System</th>
-                    {/* <th className="sticky top-0 bg-slate-300 z-10 text-center">Qty Sampling</th> */}
-                    <th className="sticky top-0 bg-slate-300 z-10">Status</th>
-                    {/* <th className="sticky top-0 bg-slate-300 z-10">Sampling</th> */}
-                    <th className="sticky top-0 bg-slate-300 z-10">Qty SO</th>
-                    <th className="sticky top-0 bg-slate-300 z-10">Koreksi</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {product?.map((item, idx) => (
-                    <tr key={`${item.TTBA_No}#${item.TTBA_SeqID}#${item.ttba_vatno}`}>
-                      <td className="border border-gray-300">{idx + 1}</td>
-                      <td className="border border-gray-300">{item?.DNc_TTBANo.split("#")[0]}</td>
-                      <td className="border border-gray-300">{item?.DNc_No}</td>
-                      <td className="border border-gray-300">
-                        {item?.item_name} {item?.ttba_itemid}
-                      </td>
-                      <td className="border border-gray-300">
-                        {item?.Rak ? `${item?.Rak}.${item?.Baris}.${item?.Kolom}` : "-"}
-                      </td>
-                      <td className="border border-gray-300">{item?.ttba_vatno}</td>
-                      {/* <td className="border border-gray-300">
-                        {item?.TTBA_qty_per_Vat} {item?.ttba_itemUnit}
-                      </td> */}
-                      <td className="border border-gray-300">
-                        {Math.round(item?.qtyWms * 1000) / 1000}
-                      </td>
-                      {/* <td className="border border-gray-300">{item?.QtySampling}</td> */}
-                      <td className="border border-gray-300">
-                        {item?.StatusVat === "Release" ? (
-                          <span className="font-semibold bg-green-400 p-1 rounded-md">Release</span>
-                        ) : item?.StatusVat === "Reject" ? (
-                          <span className="font-semibold bg-red-300 p-1 rounded-md">Reject</span>
-                        ) : (
-                          <span className="font-semibold bg-orange-300 p-1 rounded-md">Karantina</span>
-                        )}
-                      </td>
-                      {/* <td className="border border-gray-300">
-                        {item?.StatusSampling || "-"}
-                      </td> */}
-                      <td className="border border-gray-300 text-center">
-                        <input
-                          type="number"
-                          placeholder={item?.QtySO ?? item?.Qty}
-                          value={editQty[idx] || ""}
-                          onChange={(e) => handleInputChange(e.target.value, idx)}
-                          className="input input-sm w-20"
-                          disabled={
-                            item.disabled ||
-                            (scannedRackSegments &&
-                              scannedRackSegments[0] !== item.Lokasi) ||
-                            (scannedRackSegments &&
-                              scannedRackSegments[1] !== item.Rak)
-                          }
-                        />
-                        <button
-                          className="btn btn-sm btn-primary mt-2 ml-1"
-                          onClick={() => handleSaveQty(idx)}
-                          disabled={
-                            item.disabled ||
-                            (scannedRackSegments &&
-                              scannedRackSegments[0] !== item.Lokasi)
-                          }
-                        >
-                          Save
-                        </button>
-                      </td>
-                      <td className="border border-gray-300">
-                        {(
-                          (editQty[idx]
-                            ? Number(Math.round(editQty[idx] * 1000) / 1000)
-                            : Math.round(((item?.QtySO ?? item?.Qty) || 0) * 1000) / 1000) -
-                          Math.round(((item?.qtyWms ?? item?.Qty) || 0) * 1000) / 1000
-                        ).toFixed(3)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <div
-                className="fixed bottom-0 w-full bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4 m-5"
-                role="alert"
-              >
-                <p className="font-bold">Informasi</p>
-                <p>Silahkan Scan QR Rak</p>
+            {openQr && (
+              <div className="mt-4">
+                <QrScannerDummy setScanned={setScanned} />
               </div>
             )}
           </div>
-          <div className="flex justify-center m-5">
+          <div className="surface-card overflow-hidden mb-4">
+            <div className="max-w-full overflow-x-auto max-h-[650px] overflow-y-auto">
+              {product.length > 0 ? (
+                <table className="table-modern">
+                  <thead className="sticky top-0 z-10">
+                    <tr>
+                      <th className="sticky top-0 z-10">No.</th>
+                      <th className="sticky top-0 z-10">NIE</th>
+                      <th className="sticky top-0 z-10">No. Bets</th>
+                      <th className="sticky top-0 z-10">Nama Produk</th>
+                      <th className="sticky top-0 z-10">Lokasi</th>
+                      <th className="sticky top-0 z-10">Karton</th>
+                      <th className="sticky top-0 z-10 text-center">Qty System</th>
+                      <th className="sticky top-0 z-10">Status</th>
+                      <th className="sticky top-0 z-10">Qty SO</th>
+                      <th className="sticky top-0 z-10">Koreksi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {product?.map((item, idx) => (
+                      <tr key={`${item.TTBA_No}#${item.TTBA_SeqID}#${item.ttba_vatno}`}>
+                        <td>{idx + 1}</td>
+                        <td>{item?.DNc_TTBANo.split("#")[0]}</td>
+                        <td>{item?.DNc_No}</td>
+                        <td>
+                          {item?.item_name} {item?.ttba_itemid}
+                        </td>
+                        <td>
+                          {item?.Rak ? `${item?.Rak}.${item?.Baris}.${item?.Kolom}` : "-"}
+                        </td>
+                        <td>{item?.ttba_vatno}</td>
+                        <td className="text-center">
+                          {Math.round(item?.qtyWms * 1000) / 1000}
+                        </td>
+                        <td>
+                          {item?.StatusVat === "Release" ? (
+                            <span className="badge-release">Release</span>
+                          ) : item?.StatusVat === "Reject" ? (
+                            <span className="badge-reject">Reject</span>
+                          ) : (
+                            <span className="badge-karantina">Karantina</span>
+                          )}
+                        </td>
+                        <td className="text-center">
+                          <div className="flex items-center justify-center gap-1.5">
+                            <input
+                              type="number"
+                              placeholder={item?.QtySO ?? item?.Qty}
+                              value={editQty[idx] || ""}
+                              onChange={(e) => handleInputChange(e.target.value, idx)}
+                              className="input-modern w-20 py-1"
+                              disabled={
+                                item.disabled ||
+                                (scannedRackSegments &&
+                                  scannedRackSegments[0] !== item.Lokasi) ||
+                                (scannedRackSegments &&
+                                  scannedRackSegments[1] !== item.Rak)
+                              }
+                            />
+                            <button
+                              className="btn-modern-primary py-1 px-2.5 text-xs"
+                              onClick={() => handleSaveQty(idx)}
+                              disabled={
+                                item.disabled ||
+                                (scannedRackSegments &&
+                                  scannedRackSegments[0] !== item.Lokasi)
+                              }
+                            >
+                              Save
+                            </button>
+                          </div>
+                        </td>
+                        <td>
+                          {(
+                            (editQty[idx]
+                              ? Number(Math.round(editQty[idx] * 1000) / 1000)
+                              : Math.round(((item?.QtySO ?? item?.Qty) || 0) * 1000) / 1000) -
+                            Math.round(((item?.qtyWms ?? item?.Qty) || 0) * 1000) / 1000
+                          ).toFixed(3)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <div className="alert-info-modern m-4" role="alert">
+                  <p className="font-bold">Informasi</p>
+                  <p>Silahkan Scan QR Rak</p>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="flex justify-center mb-4">
             {product?.length > 0 && (
-              <form action="">
+              <form action="" className="w-full max-w-md">
                 <button
-                  className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline my-4"
+                  className="w-full btn-modern bg-sky-600 text-white hover:bg-sky-700 hover:shadow-md py-2.5"
                   type="submit"
                   onClick={(e) => handleSubmit(e)}
                 >
